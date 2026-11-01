@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="az" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Admin — No Name Restoran</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root[data-theme="dark"] {
+  --bg:#0a0a0a;--surface:#141414;--surface2:#1e1e1e;--border:#2c2c2c;
+  --gold:#f0a500;--gold-light:#ffd166;--accent:#e63946;
+  --text:#f8f5f0;--text-muted:#999;--red:#e63946;--green:#2ec4b6;--orange:#f4813f;
+}
+:root[data-theme="light"] {
+  --bg:#f5f5f0;--surface:#ffffff;--surface2:#f0ede6;--border:#e0ddd6;
+  --gold:#d4920a;--gold-light:#b8780a;--accent:#e63946;
+  --text:#1a1a1a;--text-muted:#666;--red:#e63946;--green:#1a9e94;--orange:#d4600a;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Sora',sans-serif;transition:background .3s,color .3s}
+
+/* LOGIN */
+#loginWrap{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
+.login-box{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:20px;padding:40px 28px;width:100%;max-width:380px;text-align:center;
+}
+.login-logo{font-family:'Playfair Display',serif;font-size:26px;margin-bottom:4px;
+  background:linear-gradient(90deg,#f0a500,#ffd166);-webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;background-clip:text;}
+.login-sub{color:var(--text-muted);font-size:13px;margin-bottom:28px}
+.field{margin-bottom:14px;text-align:left}
+.field label{display:block;font-size:11px;color:var(--text-muted);margin-bottom:5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+.field input{
+  width:100%;background:var(--surface2);border:1px solid var(--border);
+  border-radius:10px;padding:12px 14px;color:var(--text);font-size:14px;
+  font-family:'Sora',sans-serif;outline:none;transition:border-color .2s;
+}
+.field input:focus{border-color:var(--gold)}
+.login-btn{
+  width:100%;padding:14px;border-radius:12px;
+  background:linear-gradient(90deg,#f0a500,#e63946);
+  color:#fff;font-size:15px;font-weight:700;border:none;cursor:pointer;
+  font-family:'Sora',sans-serif;margin-top:6px;
+  box-shadow:0 4px 16px rgba(240,165,0,.3);transition:opacity .2s;
+}
+.login-btn:disabled{opacity:.5;cursor:not-allowed}
+.err-msg{color:var(--red);font-size:12px;margin-top:10px;min-height:18px}
+.lock-msg{color:var(--orange);font-size:12px;margin-top:8px;font-weight:600}
+
+/* ADMIN */
+#adminPanel{display:none}
+.admin-header{
+  background:var(--surface);border-bottom:1px solid var(--border);
+  padding:14px 20px;display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:100;flex-wrap:wrap;gap:10px;
+}
+.admin-logo{font-family:'Playfair Display',serif;font-size:18px;
+  background:linear-gradient(90deg,#f0a500,#ffd166);-webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;background-clip:text;}
+.admin-nav{display:flex;gap:8px;flex-wrap:wrap}
+.nav-btn{
+  padding:8px 16px;border-radius:10px;font-size:13px;font-weight:600;
+  border:1px solid var(--border);background:transparent;color:var(--text-muted);
+  cursor:pointer;transition:all .15s;font-family:'Sora',sans-serif;
+}
+.nav-btn.active{background:linear-gradient(90deg,#f0a500,#ffd166);color:#000;border-color:transparent}
+.header-right{display:flex;gap:8px;align-items:center}
+.theme-btn,.logout-btn{
+  padding:8px 14px;border-radius:10px;font-size:13px;
+  border:1px solid var(--border);background:transparent;color:var(--text-muted);
+  cursor:pointer;font-family:'Sora',sans-serif;
+}
+.admin-body{padding:20px;max-width:1200px;margin:0 auto}
+
+/* STATS */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:24px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px;border-top:3px solid var(--gold)}
+.stat-val{font-size:28px;font-weight:700;color:var(--gold-light);font-family:'Playfair Display',serif}
+.stat-label{font-size:11px;color:var(--text-muted);margin-top:4px}
+
+/* TABS */
+.tab{display:none}.tab.active{display:block}
+.section-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px}
+.section-hdr h2{font-family:'Playfair Display',serif;font-size:18px;color:var(--gold-light)}
+
+/* ORDERS */
+.order-filter{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.filter-btn{padding:7px 14px;border-radius:20px;font-size:12px;font-weight:600;border:1px solid var(--border);background:transparent;color:var(--text-muted);cursor:pointer;font-family:'Sora',sans-serif;transition:all .15s}
+.filter-btn.active{background:var(--gold);color:#000;border-color:transparent}
+.order-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:10px;border-left:3px solid var(--gold)}
+.order-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px}
+.order-meta{display:flex;flex-direction:column;gap:4px}
+.order-id{font-size:13px;color:var(--text-muted)}
+.order-type-badge{font-size:11px;padding:3px 10px;border-radius:10px;font-weight:700;display:inline-block;margin-top:2px}
+.type-delivery{background:#0d2a3a;color:#5dade2}
+.type-dine{background:#1a3a0d;color:var(--green)}
+.status-badge{padding:5px 12px;border-radius:20px;font-size:11px;font-weight:700}
+.s-new{background:#0d2a3a;color:#5dade2}
+.s-prep{background:#2a1500;color:var(--orange)}
+.s-done{background:#0d2a22;color:var(--green)}
+.s-cancel{background:#2a0d0d;color:var(--red)}
+.order-info{background:var(--surface2);border-radius:10px;padding:10px 12px;margin-bottom:10px;font-size:12px;line-height:1.8;color:var(--text-muted)}
+.order-info b{color:var(--text)}
+.order-items-list{margin-bottom:8px}
+.o-item-row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:13px}
+.o-item-row:last-child{border:none}
+.order-total-row{font-weight:700;color:var(--gold);text-align:right;font-size:15px;margin-top:6px}
+.order-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.act-btn{flex:1;min-width:80px;padding:10px;border-radius:10px;font-size:12px;font-weight:700;border:none;cursor:pointer;font-family:'Sora',sans-serif;transition:opacity .15s}
+.act-btn:active{opacity:.8}
+.btn-prep{background:var(--orange);color:#fff}
+.btn-done{background:var(--green);color:#000}
+.btn-cancel{background:var(--red);color:#fff}
+.no-data{text-align:center;padding:60px 20px;color:var(--text-muted);font-size:14px}
+.live-dot{width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block;margin-right:6px;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.2}}
+.refresh-btn{padding:8px 16px;border-radius:10px;font-size:12px;background:var(--surface2);border:1px solid var(--border);color:var(--text);cursor:pointer;font-family:'Sora',sans-serif}
+
+/* MENU EDITOR */
+.add-item-form{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:20px}
+.add-item-form h3{font-size:14px;font-weight:700;color:var(--gold);margin-bottom:14px}
+.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.mini-field{display:flex;flex-direction:column;gap:5px}
+.mini-field label{font-size:11px;color:var(--text-muted);font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+.mini-field input,.mini-field select,.mini-field textarea{
+  background:var(--surface2);border:1px solid var(--border);border-radius:8px;
+  padding:10px 12px;color:var(--text);font-size:13px;font-family:'Sora',sans-serif;outline:none;transition:border-color .2s;
+}
+.mini-field input:focus,.mini-field select:focus,.mini-field textarea:focus{border-color:var(--gold)}
+.mini-field textarea{height:70px;resize:none}
+.add-btn-form{
+  padding:10px 22px;border-radius:10px;background:linear-gradient(90deg,#f0a500,#ffd166);
+  color:#000;font-size:13px;font-weight:700;border:none;cursor:pointer;margin-top:14px;font-family:'Sora',sans-serif;
+}
+.menu-table{width:100%;border-collapse:collapse}
+.menu-table th{text-align:left;font-size:11px;font-weight:700;color:var(--text-muted);padding:10px 10px;border-bottom:1px solid var(--border);text-transform:uppercase;letter-spacing:.05em}
+.menu-table td{padding:10px 10px;border-bottom:1px solid var(--border);font-size:13px;vertical-align:middle}
+.t-input{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:6px 8px;color:var(--text);font-size:12px;font-family:'Sora',sans-serif;outline:none}
+.t-input:focus{border-color:var(--gold)}
+.toggle-wrap{display:flex;align-items:center;gap:6px}
+.toggle{width:40px;height:22px;border-radius:11px;border:none;cursor:pointer;position:relative;transition:background .2s;flex-shrink:0}
+.toggle.on{background:var(--green)}.toggle.off{background:var(--red)}
+.toggle-dot{width:16px;height:16px;background:#fff;border-radius:50%;position:absolute;top:3px;transition:left .2s}
+.toggle.on .toggle-dot{left:21px}.toggle.off .toggle-dot{left:3px}
+.save-row-btn{padding:5px 12px;background:var(--gold);color:#000;border:none;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Sora',sans-serif;white-space:nowrap}
+.del-btn{padding:5px 10px;background:var(--red);color:#fff;border:none;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Sora',sans-serif}
+.img-preview{width:40px;height:40px;border-radius:8px;object-fit:cover;font-size:22px;display:flex;align-items:center;justify-content:center;background:var(--surface2)}
+
+/* Scrollable table */
+.table-wrap{overflow-x:auto}
+</style>
+</head>
+<body>
+
+<!-- ═══ LOGIN ═══ -->
+<div id="loginWrap">
+  <div class="login-box">
+    <div class="login-logo">🔐 Admin Panel</div>
+    <div class="login-sub">No Name Restoran — İdarəetmə</div>
+    <div class="field">
+      <label>İstifadəçi adı</label>
+      <input type="text" id="loginUser" placeholder="admin" autocomplete="username">
+    </div>
+    <div class="field">
+      <label>Şifrə</label>
+      <input type="password" id="loginPass" placeholder="••••••••" autocomplete="current-password"
+        onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <button class="login-btn" id="loginBtn" onclick="doLogin()">Daxil ol →</button>
+    <div class="err-msg" id="errMsg"></div>
+    <div class="lock-msg" id="lockMsg"></div>
+  </div>
+</div>
+
+<!-- ═══ ADMIN ═══ -->
+<div id="adminPanel">
+  <div class="admin-header">
+    <div class="admin-logo">No Name Restoran</div>
+    <div class="admin-nav">
+      <button class="nav-btn active" onclick="showTab('orders')">📋 Sifarişlər</button>
+      <button class="nav-btn" onclick="showTab('menu')">🍽️ Menyu</button>
+    </div>
+    <div class="header-right">
+      <button class="theme-btn" id="adminThemeBtn" onclick="toggleTheme()">☀️</button>
+      <button class="logout-btn" onclick="logout()">Çıxış</button>
+    </div>
+  </div>
+
+  <div class="admin-body">
+    <!-- STATS -->
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-val" id="stTotal">0</div><div class="stat-label">Cəmi sifariş</div></div>
+      <div class="stat-card"><div class="stat-val" id="stNew">0</div><div class="stat-label">Gözləyən</div></div>
+      <div class="stat-card"><div class="stat-val" id="stPrep">0</div><div class="stat-label">Hazırlanır</div></div>
+      <div class="stat-card"><div class="stat-val" id="stRevenue">0 ₼</div><div class="stat-label">Gəlir</div></div>
+      <div class="stat-card"><div class="stat-val" id="stDelivery">0</div><div class="stat-label">Çatdırılma</div></div>
+      <div class="stat-card"><div class="stat-val" id="stDine">0</div><div class="stat-label">Restoranda</div></div>
+    </div>
+
+    <!-- ORDERS TAB -->
+    <div class="tab active" id="tab-orders">
+      <div class="section-hdr">
+        <h2><span class="live-dot"></span>Sifarişlər</h2>
+        <button class="refresh-btn" onclick="loadOrders()">🔄 Yenilə</button>
+      </div>
+      <div class="order-filter">
+        <button class="filter-btn active" onclick="filterOrders('all')">Hamısı</button>
+        <button class="filter-btn" onclick="filterOrders('new')">⏳ Yeni</button>
+        <button class="filter-btn" onclick="filterOrders('prep')">🔥 Hazırlanır</button>
+        <button class="filter-btn" onclick="filterOrders('done')">✅ Tamamlandı</button>
+        <button class="filter-btn" onclick="filterOrders('cancel')">❌ Ləğv</button>
+        <button class="filter-btn" onclick="filterOrders('delivery')">🚗 Çatdırılma</button>
+        <button class="filter-btn" onclick="filterOrders('dine')">🍽️ Restoran</button>
+      </div>
+      <div id="ordersList"></div>
+    </div>
+
+    <!-- MENU TAB -->
+    <div class="tab" id="tab-menu">
+      <div class="section-hdr"><h2>Menyu İdarəetməsi</h2></div>
+
+      <!-- ADD NEW ITEM -->
+      <div class="add-item-form">
+        <h3>➕ Yeni yemək əlavə et</h3>
+        <div class="form-grid">
+          <div class="mini-field"><label>Kateqoriya</label>
+            <select id="new_cat">
+              <option value="sabah">🌅 Səhər</option>
+              <option value="shorba">🍲 Şorba</option>
+              <option value="isti">🔥 İsti</option>
+              <option value="kabab">🍖 Kabab</option>
+              <option value="salat">🥗 Salat</option>
+              <option value="desert">🍯 Desert</option>
+              <option value="icki">🥤 İçki</option>
+            </select>
+          </div>
+          <div class="mini-field"><label>Emoji</label><input type="text" id="new_emoji" placeholder="🍕" maxlength="4"></div>
+          <div class="mini-field"><label>Ad</label><input type="text" id="new_name" placeholder="Yemək adı"></div>
+          <div class="mini-field"><label>Qiymət (₼)</label><input type="number" id="new_price" placeholder="0.00" step="0.5" min="0"></div>
+          <div class="mini-field"><label>Şəkil URL (istəyə görə)</label><input type="text" id="new_img" placeholder="https://..."></div>
+          <div class="mini-field"><label>Təsvir</label><textarea id="new_desc" placeholder="Qısa təsvir..."></textarea></div>
+        </div>
+        <button class="add-btn-form" onclick="addMenuItem()">➕ Əlavə et</button>
+      </div>
+
+      <!-- MENU TABLE -->
+      <div class="table-wrap">
+        <table class="menu-table">
+          <thead><tr>
+            <th>Şəkil</th><th>Ad</th><th>Kateqoriya</th>
+            <th>Qiymət</th><th>Stok</th><th>Populyar</th><th>Əməliyyat</th>
+          </tr></thead>
+          <tbody id="menuBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// SECURITY — şifrə SHA-256 hash ilə saxlanır
+// ═══════════════════════════════════════════════════════
+// "admin123" → sha256 (brauzerdə hesablanır)
+const CORRECT_HASH = 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3'; // "admin123" SHA-256
+const ADMIN_USER = 'admin';
+const SESSION_KEY = 'nn_admin_session';
+const SESSION_EXPIRE = 8 * 60 * 60 * 1000; // 8 saat
+
+// Brute-force qoruması
+let failCount = 0;
+let lockUntil = 0;
+const MAX_FAIL = 5;
+const LOCK_DURATION = 60 * 1000; // 1 dəqiqə
+
+async function sha256(msg) {
+  const enc = new TextEncoder().encode(msg);
+  const buf = await crypto.subtle.digest('SHA-256', enc);
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+async function doLogin() {
+  const now = Date.now();
+  if (now < lockUntil) {
+    const left = Math.ceil((lockUntil - now) / 1000);
+    document.getElementById('lockMsg').textContent = `⛔ ${left} saniyə gözləyin`;
+    return;
+  }
+
+  const user = document.getElementById('loginUser').value.trim();
+  const pass = document.getElementById('loginPass').value;
+  const btn = document.getElementById('loginBtn');
+  btn.disabled = true;
+  btn.textContent = '...';
+
+  const hash = await sha256(pass);
+
+  if (user === ADMIN_USER && hash === CORRECT_HASH) {
+    failCount = 0;
+    document.getElementById('lockMsg').textContent = '';
+    // Session token yarat
+    const token = { ts: Date.now(), expire: Date.now() + SESSION_EXPIRE };
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify(token));
+    showAdminPanel();
+  } else {
+    failCount++;
+    document.getElementById('errMsg').textContent = `İstifadəçi adı və ya şifrə yanlışdır. (${failCount}/${MAX_FAIL})`;
+    if (failCount >= MAX_FAIL) {
+      lockUntil = Date.now() + LOCK_DURATION;
+      failCount = 0;
+      startLockTimer();
+    }
+  }
+  btn.disabled = false;
+  btn.textContent = 'Daxil ol →';
+}
+
+function startLockTimer() {
+  const interval = setInterval(() => {
+    const left = Math.ceil((lockUntil - Date.now()) / 1000);
+    if (left <= 0) {
+      clearInterval(interval);
+      document.getElementById('lockMsg').textContent = '';
+      document.getElementById('errMsg').textContent = '';
+    } else {
+      document.getElementById('lockMsg').textContent = `⛔ ${left} saniyə gözləyin (${MAX_FAIL} cəhddən sonra bloklandı)`;
+    }
+  }, 500);
+}
+
+function checkSession() {
+  try {
+    const raw = sessionStorage.getItem(SESSION_KEY);
+    if (!raw) return false;
+    const token = JSON.parse(raw);
+    if (Date.now() > token.expire) { sessionStorage.removeItem(SESSION_KEY); return false; }
+    return true;
+  } catch(e) { return false; }
+}
+
+function showAdminPanel() {
+  document.getElementById('loginWrap').style.display = 'none';
+  document.getElementById('adminPanel').style.display = 'block';
+  loadOrders();
+  renderMenuTable();
+  setInterval(loadOrders, 20000);
+}
+
+function logout() {
+  sessionStorage.removeItem(SESSION_KEY);
+  document.getElementById('loginWrap').style.display = 'flex';
+  document.getElementById('adminPanel').style.display = 'none';
+  document.getElementById('loginPass').value = '';
+}
+
+// ─── GUARD: birbaşa daxil olmağa çalışarsa ───
+window.addEventListener('load', () => {
+  if (!checkSession()) {
+    document.getElementById('adminPanel').style.display = 'none';
+    document.getElementById('loginWrap').style.display = 'flex';
+  } else {
+    showAdminPanel();
+  }
+  initTheme();
+});
+
+// ═══════════════════════════════════════════════════════
+// THEME
+// ═══════════════════════════════════════════════════════
+function initTheme() {
+  const saved = localStorage.getItem('nn_theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', saved);
+  const btn = document.getElementById('adminThemeBtn');
+  if (btn) btn.textContent = saved === 'dark' ? '☀️' : '🌙';
+}
+function toggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme');
+  const next = cur === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('nn_theme', next);
+  document.getElementById('adminThemeBtn').textContent = next === 'dark' ? '☀️' : '🌙';
+}
+
+// ═══════════════════════════════════════════════════════
+// TABS
+// ═══════════════════════════════════════════════════════
+function showTab(tab) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach((b,i) => b.classList.toggle('active', ['orders','menu'][i]===tab));
+  document.getElementById('tab-'+tab).classList.add('active');
+  if (tab === 'menu') renderMenuTable();
+}
+
+// ═══════════════════════════════════════════════════════
+// MENU (admin yazır, müştəri oxuyur)
+// ═══════════════════════════════════════════════════════
+const DEFAULT_MENU = [
+  {id:1,cat:'sabah',name:'Kənd Qəhvaltısı',desc:'Yumurta, pendir, kərə yağı, çörək',price:8.50,emoji:'🍳',popular:true},
+  {id:2,cat:'sabah',name:'Menemen',desc:'Pomidor, biber, yumurta, soğan',price:6.00,emoji:'🥚'},
+  {id:3,cat:'shorba',name:'Düşbərə',desc:'Dana əti, xəmir, qaymaq',price:5.50,emoji:'🍲',popular:true},
+  {id:4,cat:'shorba',name:'Piti',desc:'Qoyun əti, noxud, şabalıd soğanı',price:7.00,emoji:'🥣'},
+  {id:5,cat:'shorba',name:'Kəllə-paça',desc:'Ənənəvi Azərbaycan şorbası',price:8.00,emoji:'🍜'},
+  {id:6,cat:'isti',name:'Lülə Kabab',desc:'Dana əti, soğan, ədviyyat',price:12.50,emoji:'🥩',popular:true},
+  {id:7,cat:'isti',name:'Plov',desc:'Basmati düyü, quzuəti, şaftalı',price:14.00,emoji:'🍚'},
+  {id:8,cat:'isti',name:'Dolma',desc:'Üzüm yarpağı, ətin ü, düyü',price:9.50,emoji:'🫙'},
+  {id:9,cat:'kabab',name:'Tike Kabab',desc:'Dana filesi, mangalda bişirilmiş',price:18.00,emoji:'🍖',popular:true},
+  {id:10,cat:'kabab',name:'Toyuq Kabab',desc:'Marinadlı toyuq, cəfəri sousu ilə',price:13.00,emoji:'🍗'},
+  {id:11,cat:'kabab',name:'Balıq Mangal',desc:'Tazə qızılbalıq, limon, dərəotu',price:22.00,emoji:'🐟'},
+  {id:12,cat:'salat',name:'Çoban Salatı',desc:'Pomidor, xiyar, soğan, zəytun yağı',price:5.00,emoji:'🥗'},
+  {id:13,cat:'salat',name:'Cəzar Salat',desc:'Romen, kruton, parmezan',price:7.50,emoji:'🥙'},
+  {id:14,cat:'desert',name:'Baklava',desc:'Cevizli, ballı, xırtıldayan',price:4.50,emoji:'🍯',popular:true},
+  {id:15,cat:'desert',name:'Şəkərbura',desc:'Ənənəvi bayram şirnisi',price:3.50,emoji:'🥮'},
+  {id:16,cat:'icki',name:'Çay',desc:'Azərbaycan armudu çayı',price:2.00,emoji:'☕'},
+  {id:17,cat:'icki',name:'Ayran',desc:'Soyuq, təzə çalınmış',price:2.50,emoji:'🥛'},
+  {id:18,cat:'icki',name:'Limonad',desc:'Ev limonadı, nanə, limon',price:4.00,emoji:'🍋',outOfStock:true},
+];
+
+function getMenu() {
+  if (!checkSession()) return [];
+  try {
+    const s = localStorage.getItem('nn_menu');
+    if (s) return JSON.parse(s);
+  } catch(e){}
+  return DEFAULT_MENU;
+}
+
+function saveMenu(menu) {
+  if (!checkSession()) return;
+  localStorage.setItem('nn_menu', JSON.stringify(menu));
+}
+
+function renderMenuTable() {
+  const menu = getMenu();
+  const catLabels = {sabah:'🌅 Səhər',shorba:'🍲 Şorba',isti:'🔥 İsti',kabab:'🍖 Kabab',salat:'🥗 Salat',desert:'🍯 Desert',icki:'🥤 İçki'};
+  document.getElementById('menuBody').innerHTML = menu.map(item => {
+    const imgEl = item.imageUrl
+      ? `<img src="${item.imageUrl}" style="width:40px;height:40px;border-radius:8px;object-fit:cover" onerror="this.style.display='none'">`
+      : `<span style="font-size:26px">${item.emoji}</span>`;
+    return `<tr id="row_${item.id}">
+      <td>${imgEl}</td>
+      <td>
+        <input class="t-input" id="mn_${item.id}" value="${item.name}" style="min-width:120px">
+        <input class="t-input" style="margin-top:4px;font-size:11px;color:var(--text-muted)" id="mdesc_${item.id}" value="${item.desc||''}" placeholder="Təsvir">
+        <input class="t-input" style="margin-top:4px;font-size:11px" id="mimg_${item.id}" value="${item.imageUrl||''}" placeholder="Şəkil URL">
+        <input class="t-input" style="margin-top:4px;font-size:11px" id="memoji_${item.id}" value="${item.emoji||''}" placeholder="Emoji" maxlength="4">
+      </td>
+      <td style="color:var(--text-muted);font-size:12px">${catLabels[item.cat]||item.cat}</td>
+      <td><input class="t-input" type="number" step="0.5" min="0" id="mp_${item.id}" value="${item.price}" style="width:70px"></td>
+      <td>
+        <button class="toggle ${item.outOfStock?'off':'on'}" id="mstk_${item.id}" onclick="toggleField(${item.id},'outOfStock')">
+          <div class="toggle-dot"></div>
+        </button>
+      </td>
+      <td>
+        <button class="toggle ${item.popular?'on':'off'}" id="mpop_${item.id}" onclick="toggleField(${item.id},'popular')">
+          <div class="toggle-dot"></div>
+        </button>
+      </td>
+      <td style="display:flex;gap:6px;flex-wrap:wrap">
+        <button class="save-row-btn" onclick="saveRow(${item.id})">💾 Saxla</button>
+        <button class="del-btn" onclick="deleteItem(${item.id})">🗑️</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function saveRow(id) {
+  if (!checkSession()) return;
+  const menu = getMenu();
+  const idx = menu.findIndex(i => i.id === id);
+  if (idx < 0) return;
+  menu[idx].name = document.getElementById('mn_'+id).value.trim() || menu[idx].name;
+  menu[idx].desc = document.getElementById('mdesc_'+id).value.trim();
+  menu[idx].imageUrl = document.getElementById('mimg_'+id).value.trim();
+  menu[idx].emoji = document.getElementById('memoji_'+id).value.trim() || menu[idx].emoji;
+  menu[idx].price = parseFloat(document.getElementById('mp_'+id).value) || menu[idx].price;
+  saveMenu(menu);
+  const btn = event.target;
+  const orig = btn.textContent;
+  btn.textContent = '✓ Saxlandı';btn.style.background='var(--green)';btn.style.color='#000';
+  setTimeout(()=>{btn.textContent=orig;btn.style.background='';btn.style.color='';},1500);
+}
+
+function toggleField(id, field) {
+  if (!checkSession()) return;
+  const menu = getMenu();
+  const idx = menu.findIndex(i => i.id === id);
+  if (idx < 0) return;
+  menu[idx][field] = !menu[idx][field];
+  saveMenu(menu);
+  renderMenuTable();
+}
+
+function deleteItem(id) {
+  if (!checkSession()) return;
+  if (!confirm('Bu yemeyi silmək istədiyinizə əminsiniz?')) return;
+  const menu = getMenu().filter(i => i.id !== id);
+  saveMenu(menu);
+  renderMenuTable();
+}
+
+function addMenuItem() {
+  if (!checkSession()) return;
+  const name = document.getElementById('new_name').value.trim();
+  const price = parseFloat(document.getElementById('new_price').value);
+  if (!name || isNaN(price)) { alert('Ad və qiymət mütləqdir'); return; }
+  const menu = getMenu();
+  const newId = Math.max(...menu.map(i=>i.id), 0) + 1;
+  menu.push({
+    id: newId,
+    cat: document.getElementById('new_cat').value,
+    emoji: document.getElementById('new_emoji').value.trim() || '🍽️',
+    name,
+    desc: document.getElementById('new_desc').value.trim(),
+    price,
+    imageUrl: document.getElementById('new_img').value.trim(),
+    popular: false,
+    outOfStock: false,
+  });
+  saveMenu(menu);
+  renderMenuTable();
+  ['new_name','new_price','new_emoji','new_img','new_desc'].forEach(id=>document.getElementById(id).value='');
+}
+
+// ═══════════════════════════════════════════════════════
+// ORDERS
+// ═══════════════════════════════════════════════════════
+let orderFilter = 'all';
+
+function filterOrders(f) {
+  orderFilter = f;
+  document.querySelectorAll('.filter-btn').forEach((btn,i)=>{
+    const filters = ['all','new','prep','done','cancel','delivery','dine'];
+    btn.classList.toggle('active', filters[i]===f);
+  });
+  loadOrders();
+}
+
+function loadOrders() {
+  if (!checkSession()) return;
+  const all = JSON.parse(localStorage.getItem('nn_orders')||'[]');
+
+  // Stats
+  document.getElementById('stTotal').textContent = all.length;
+  document.getElementById('stNew').textContent = all.filter(o=>o.status==='new').length;
+  document.getElementById('stPrep').textContent = all.filter(o=>o.status==='prep').length;
+  document.getElementById('stRevenue').textContent = all.filter(o=>o.status!=='cancel').reduce((s,o)=>s+o.total,0).toFixed(2)+' ₼';
+  document.getElementById('stDelivery').textContent = all.filter(o=>o.type==='delivery').length;
+  document.getElementById('stDine').textContent = all.filter(o=>o.type==='dine').length;
+
+  let orders = all;
+  if (orderFilter !== 'all') {
+    if (['delivery','dine'].includes(orderFilter)) {
+      orders = all.filter(o=>o.type===orderFilter);
+    } else {
+      orders = all.filter(o=>o.status===orderFilter);
+    }
+  }
+
+  if (!orders.length) {
+    document.getElementById('ordersList').innerHTML = `<div class="no-data">📋 Sifariş yoxdur</div>`;
+    return;
+  }
+
+  const sMap = {new:'s-new',prep:'s-prep',done:'s-done',cancel:'s-cancel'};
+  const sLabel = {new:'⏳ Yeni',prep:'🔥 Hazırlanır',done:'✅ Tamamlandı',cancel:'❌ Ləğv'};
+
+  document.getElementById('ordersList').innerHTML = orders.map(o => {
+    const infoRows = o.type === 'delivery'
+      ? `<b>👤 Ad:</b> ${o.name||'-'}<br><b>📞 Telefon:</b> ${o.phone||'-'}<br><b>📍 Ünvan:</b> ${o.address||'-'}${o.note?`<br><b>📝 Qeyd:</b> ${o.note}`:''}`
+      : `<b>🪑 Stol:</b> ${o.table||'-'}${o.guestName?`<br><b>👤 Ad:</b> ${o.guestName}`:''}${o.note?`<br><b>📝 Qeyd:</b> ${o.note}`:''}`;
+    const itemRows = (o.items||[]).map(it=>
+      `<div class="o-item-row"><span>${it.qty}× ${it.name}</span><span>${(it.price*it.qty).toFixed(2)} ₼</span></div>`
+    ).join('');
+    const acts = o.status==='new'
+      ? `<button class="act-btn btn-prep" onclick="updateOrder(${o.id},'prep')">🔥 Hazırla</button>
+         <button class="act-btn btn-cancel" onclick="updateOrder(${o.id},'cancel')">❌ Ləğv</button>`
+      : o.status==='prep'
+      ? `<button class="act-btn btn-done" onclick="updateOrder(${o.id},'done')">✅ Tamamla</button>
+         <button class="act-btn btn-cancel" onclick="updateOrder(${o.id},'cancel')">❌ Ləğv</button>`
+      : '';
+    return `<div class="order-card">
+      <div class="order-top">
+        <div class="order-meta">
+          <div class="order-id">#${o.id} • ${o.date||''} ${o.time||''}</div>
+          <span class="order-type-badge ${o.type==='delivery'?'type-delivery':'type-dine'}">${o.type==='delivery'?'🚗 Çatdırılma':'🍽️ Restoranda'}</span>
+        </div>
+        <span class="status-badge ${sMap[o.status]||'s-new'}">${sLabel[o.status]||o.status}</span>
+      </div>
+      <div class="order-info">${infoRows}</div>
+      <div class="order-items-list">${itemRows}</div>
+      <div class="order-total-row">Cəmi: ${o.total?.toFixed(2)||0} ₼</div>
+      ${acts?`<div class="order-actions">${acts}</div>`:''}
+    </div>`;
+  }).join('');
+}
+
+function updateOrder(id, status) {
+  if (!checkSession()) return;
+  const orders = JSON.parse(localStorage.getItem('nn_orders')||'[]');
+  const idx = orders.findIndex(o=>o.id===id);
+  if (idx>=0) { orders[idx].status=status; localStorage.setItem('nn_orders',JSON.stringify(orders)); }
+  loadOrders();
+}
+</script>
+</body>
+</html>
