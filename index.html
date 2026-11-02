@@ -1,782 +1,605 @@
 <!DOCTYPE html>
-<html lang="az" data-theme="dark">
+<html lang="az">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>No Name Restoran</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
-<style>
-:root[data-theme="dark"] {
-  --bg:#0a0a0a;--surface:#141414;--surface2:#1e1e1e;--border:#2c2c2c;
-  --gold:#f0a500;--gold-light:#ffd166;--accent:#e63946;
-  --text:#f8f5f0;--text-muted:#999;--red:#e63946;--green:#2ec4b6;
-  --shadow:rgba(0,0,0,.4);--modal-bg:#141414;
-}
-:root[data-theme="light"] {
-  --bg:#f5f5f0;--surface:#ffffff;--surface2:#f0ede6;--border:#e0ddd6;
-  --gold:#d4920a;--gold-light:#b8780a;--accent:#e63946;
-  --text:#1a1a1a;--text-muted:#666;--red:#e63946;--green:#1a9e94;
-  --shadow:rgba(0,0,0,.12);--modal-bg:#ffffff;
-}
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Sora',sans-serif;transition:background .3s,color .3s}
-body{min-height:100vh;padding-bottom:90px}
-
-/* HEADER */
-.header{
-  position:sticky;top:env(safe-area-inset-top,0);z-index:100;
-  background:var(--bg);backdrop-filter:blur(14px);
-  border-bottom:1px solid var(--border);padding:14px 16px 0;
-  transition:background .3s,border-color .3s;
-}
-.header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;gap:10px}
-.logo{font-family:'Playfair Display',serif;font-size:20px;letter-spacing:.02em;
-  background:linear-gradient(90deg,#f0a500,#ffd166,#f0a500);
-  background-size:200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;
-  background-clip:text;animation:shimmer 3s infinite linear;white-space:nowrap;}
-@keyframes shimmer{0%{background-position:0%}100%{background-position:200%}}
-.header-actions{display:flex;gap:8px;align-items:center}
-.icon-btn{
-  width:38px;height:38px;border-radius:50%;border:1px solid var(--border);
-  background:var(--surface);color:var(--text);font-size:16px;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;
-}
-.icon-btn:active{transform:scale(.9)}
-
-/* CATS */
-.cats{display:flex;gap:8px;overflow-x:auto;padding-bottom:14px;scrollbar-width:none}
-.cats::-webkit-scrollbar{display:none}
-.cat-btn{
-  flex-shrink:0;padding:8px 16px;border-radius:20px;font-size:13px;font-weight:500;
-  white-space:nowrap;border:1px solid var(--border);background:transparent;
-  color:var(--text-muted);cursor:pointer;transition:all .15s;font-family:'Sora',sans-serif;
-}
-.cat-btn.active{background:linear-gradient(90deg,#f0a500,#ffd166);color:#000;border-color:transparent;font-weight:700;box-shadow:0 2px 12px rgba(240,165,0,.3)}
-
-/* CONTENT */
-.content{padding:16px}
-.section-title{
-  font-family:'Playfair Display',serif;font-size:19px;color:var(--gold-light);
-  margin:20px 0 12px;padding-left:10px;border-left:3px solid var(--accent);
-}
-.food-card{
-  display:flex;gap:12px;align-items:flex-start;background:var(--surface);
-  border:1px solid var(--border);border-left:3px solid var(--gold);
-  border-radius:14px;padding:13px;margin-bottom:10px;
-  transition:transform .15s,box-shadow .2s,background .3s;
-}
-.food-card:active{transform:scale(.985);box-shadow:0 4px 20px rgba(240,165,0,.12)}
-.food-img{
-  width:82px;height:82px;border-radius:10px;flex-shrink:0;font-size:32px;
-  display:flex;align-items:center;justify-content:center;
-  background:var(--surface2);border:1px solid var(--border);overflow:hidden;
-}
-.food-img img{width:100%;height:100%;object-fit:cover;border-radius:10px}
-.food-info{flex:1;min-width:0}
-.food-name{font-size:14px;font-weight:600;margin-bottom:3px;line-height:1.3}
-.food-desc{font-size:11px;color:var(--text-muted);line-height:1.5;margin-bottom:7px}
-.food-bottom{display:flex;align-items:center;justify-content:space-between;gap:8px}
-.food-price{font-size:16px;font-weight:700;color:var(--gold)}
-.food-badge{font-size:10px;padding:2px 8px;border-radius:8px;font-weight:600;display:inline-block;margin-top:2px}
-.badge-out{background:#3a1212;color:var(--red)}
-.badge-pop{background:#0d3028;color:var(--green)}
-.add-btn{
-  width:34px;height:34px;border-radius:50%;
-  background:linear-gradient(135deg,#f0a500,#ffd166);
-  border:none;color:#000;font-size:20px;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;
-  flex-shrink:0;box-shadow:0 2px 10px rgba(240,165,0,.35);transition:transform .1s;
-}
-.add-btn:active{transform:scale(.88)}
-.qty-ctrl{display:flex;align-items:center;gap:6px}
-.qty-ctrl button{
-  width:30px;height:30px;border-radius:50%;border:1px solid var(--border);
-  background:var(--surface2);color:var(--text);font-size:16px;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;transition:all .15s;
-}
-.qty-ctrl button:active{background:var(--gold);color:#000}
-.qty-ctrl span{font-weight:700;font-size:14px;min-width:20px;text-align:center;color:var(--gold)}
-
-/* CART BAR */
-.cart-bar{
-  position:fixed;bottom:env(safe-area-inset-bottom,0);left:0;right:0;
-  background:linear-gradient(90deg,#f0a500,#e63946);padding:14px 20px;
-  display:flex;align-items:center;justify-content:space-between;
-  cursor:pointer;z-index:200;transform:translateY(100%);
-  transition:transform .25s cubic-bezier(.4,0,.2,1);
-  box-shadow:0 -4px 24px rgba(240,165,0,.3);
-}
-.cart-bar.show{transform:translateY(0)}
-.cart-bar-left{display:flex;align-items:center;gap:10px}
-.cart-count{background:rgba(0,0,0,.25);color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px}
-.cart-bar-label{font-weight:700;color:#fff;font-size:14px}
-.cart-bar-total{font-weight:700;color:#fff;font-size:17px}
-
-/* OVERLAY & MODALS */
-.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:300;backdrop-filter:blur(6px)}
-.overlay.show{display:block}
-.modal{
-  position:fixed;bottom:0;left:0;right:0;z-index:400;background:var(--modal-bg);
-  border-radius:24px 24px 0 0;padding:22px 18px 32px;max-height:90vh;overflow-y:auto;
-  transform:translateY(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);
-}
-.modal.show{transform:translateY(0)}
-.modal-handle{width:40px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 18px}
-.modal-title{font-family:'Playfair Display',serif;font-size:20px;margin-bottom:16px;color:var(--gold-light)}
-
-/* ORDER TYPE MODAL */
-.order-type-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
-.order-type-card{
-  padding:20px 12px;border-radius:14px;border:2px solid var(--border);
-  background:var(--surface2);text-align:center;cursor:pointer;
-  transition:all .2s;
-}
-.order-type-card:hover,.order-type-card:active{border-color:var(--gold);background:var(--surface)}
-.order-type-card .ot-icon{font-size:36px;margin-bottom:8px}
-.order-type-card .ot-label{font-size:13px;font-weight:600}
-.order-type-card .ot-sub{font-size:11px;color:var(--text-muted);margin-top:3px}
-
-/* FORM */
-.form-section{display:none}
-.form-section.show{display:block}
-.form-title{font-size:15px;font-weight:700;color:var(--gold);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border)}
-.field-group{margin-bottom:12px}
-.field-group label{display:block;font-size:11px;color:var(--text-muted);margin-bottom:5px;font-weight:600}
-.field-group input,.field-group textarea,.field-group select{
-  width:100%;background:var(--surface2);border:1px solid var(--border);
-  border-radius:10px;padding:11px 13px;color:var(--text);font-size:14px;
-  font-family:'Sora',sans-serif;outline:none;transition:border-color .2s;
-}
-.field-group input:focus,.field-group textarea:focus,.field-group select:focus{border-color:var(--gold)}
-.field-group textarea{resize:none;height:80px;line-height:1.5}
-.field-group select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23999' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}
-
-.cart-items-list{margin-bottom:14px}
-.cart-item-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);gap:8px}
-.cart-item-row:last-child{border:none}
-.cart-item-info{flex:1;font-size:13px}
-.cart-item-price{font-size:13px;color:var(--gold);font-weight:600;white-space:nowrap}
-.cart-total-row{display:flex;justify-content:space-between;padding:14px 0;font-size:16px;font-weight:700;border-top:1px solid var(--border)}
-.cart-total-row span:last-child{color:var(--gold);font-size:19px}
-
-.btn-primary{
-  width:100%;padding:15px;border-radius:12px;
-  background:linear-gradient(90deg,#f0a500,#e63946);
-  color:#fff;font-size:15px;font-weight:700;border:none;cursor:pointer;
-  font-family:'Sora',sans-serif;box-shadow:0 4px 16px rgba(240,165,0,.25);
-  transition:opacity .15s;margin-bottom:10px;
-}
-.btn-primary:active{opacity:.85}
-.btn-secondary{
-  width:100%;padding:12px;border-radius:12px;background:transparent;
-  color:var(--text-muted);font-size:14px;border:1px solid var(--border);
-  cursor:pointer;font-family:'Sora',sans-serif;transition:all .15s;
-}
-.btn-secondary:active{border-color:var(--gold);color:var(--gold)}
-.btn-back{
-  display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text-muted);
-  background:none;border:none;cursor:pointer;margin-bottom:14px;font-family:'Sora',sans-serif;
-}
-
-/* SETTINGS PANEL */
-.settings-panel{
-  position:fixed;top:0;left:0;right:0;bottom:0;z-index:500;
-  background:var(--modal-bg);transform:translateX(-100%);
-  transition:transform .3s cubic-bezier(.4,0,.2,1);overflow-y:auto;
-}
-.settings-panel.show{transform:translateX(0)}
-.settings-header{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:20px 18px;border-bottom:1px solid var(--border);
-  position:sticky;top:0;background:var(--modal-bg);z-index:1;
-}
-.settings-header h2{font-family:'Playfair Display',serif;font-size:20px;color:var(--gold-light)}
-.close-btn{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
-.settings-body{padding:20px 18px}
-.settings-section{margin-bottom:24px}
-.settings-section h3{font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px}
-.lang-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.lang-card{
-  padding:12px 8px;border-radius:12px;border:1px solid var(--border);
-  background:var(--surface2);text-align:center;cursor:pointer;transition:all .2s;
-}
-.lang-card.active{border-color:var(--gold);background:var(--surface)}
-.lang-card .lc-flag{font-size:24px;margin-bottom:4px}
-.lang-card .lc-name{font-size:12px;font-weight:600}
-
-/* SUCCESS */
-.success-screen{text-align:center;padding:30px 0;display:none}
-.success-screen .s-icon{font-size:64px;margin-bottom:16px}
-.success-screen h3{font-family:'Playfair Display',serif;font-size:22px;color:var(--gold-light);margin-bottom:8px}
-.success-screen p{color:var(--text-muted);font-size:13px;line-height:1.7}
-
-.empty{text-align:center;padding:60px 20px;color:var(--text-muted)}
-
-@media(prefers-reduced-motion:reduce){.cart-bar,.modal,.settings-panel{transition:none}.logo{animation:none}}
-</style>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>No Name Restaurant – Admin Panel</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="header">
-  <div class="header-top">
-    <div class="logo">No Name Restoran</div>
-    <div class="header-actions">
-      <button class="icon-btn" onclick="toggleTheme()" id="themeBtn" title="Rejim">🌙</button>
-      <button class="icon-btn" onclick="openSettings()" title="Ayarlar">⚙️</button>
+<div class="app" id="app">
+
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon"><i class="fas fa-crown"></i></div>
+      <h2>No Name</h2>
+      <span>Restaurant</span>
     </div>
-  </div>
-  <div class="cats" id="catBar"></div>
-</div>
 
-<div class="content" id="menuContent"></div>
+    <nav class="nav-section">
+      <div class="nav-item active" data-page="dashboard">
+        <i class="fas fa-home"></i><span>Ana Panel</span>
+      </div>
+      <div class="nav-item" data-page="menu">
+        <i class="fas fa-utensils"></i><span>Menyu</span>
+      </div>
+      <div class="nav-item" data-page="orders">
+        <i class="fas fa-shopping-cart"></i><span>Sifarişlər</span>
+        <span class="nav-badge" id="orderBadge">3</span>
+      </div>
+      <div class="nav-item" data-page="customers">
+        <i class="fas fa-users"></i><span>Müştərilər</span>
+      </div>
+      <div class="nav-item" data-page="map">
+        <i class="fas fa-map-marker-alt"></i><span>Çatdırılma Xəritəsi</span>
+      </div>
+      <div class="nav-item" data-page="stats">
+        <i class="fas fa-chart-bar"></i><span>Statistika</span>
+      </div>
+      <div class="nav-item" data-page="settings">
+        <i class="fas fa-cog"></i><span>Parametrlər</span>
+      </div>
+      <div class="nav-item" data-page="profile">
+        <i class="fas fa-user-circle"></i><span>Profil Ayarları</span>
+      </div>
+      <div class="nav-item" data-page="languages">
+        <i class="fas fa-globe"></i><span>Dillər</span>
+      </div>
+      <div class="nav-item" id="logoutBtn">
+        <i class="fas fa-sign-out-alt"></i><span>Çıxış</span>
+      </div>
+    </nav>
 
-<div class="cart-bar" id="cartBar" onclick="openCart()">
-  <div class="cart-bar-left">
-    <div class="cart-count" id="cartCount">0</div>
-    <div class="cart-bar-label" id="cartBarLabel">Sifarişə bax</div>
-  </div>
-  <div class="cart-bar-total" id="cartBarTotal">0.00 ₼</div>
-</div>
-
-<!-- OVERLAY -->
-<div class="overlay" id="overlay" onclick="closeModals()"></div>
-
-<!-- CART MODAL -->
-<div class="modal" id="cartModal">
-  <div class="modal-handle"></div>
-  <div id="cartContent"></div>
-</div>
-
-<!-- ORDER TYPE MODAL -->
-<div class="modal" id="orderTypeModal">
-  <div class="modal-handle"></div>
-  <div class="modal-title" id="otTitle">Sifariş növünü seçin</div>
-  <div id="pendingItemInfo" style="background:var(--surface2);border-radius:10px;padding:12px;margin-bottom:16px;font-size:14px"></div>
-  <div class="order-type-grid">
-    <div class="order-type-card" onclick="selectOrderType('delivery')">
-      <div class="ot-icon">🚗</div>
-      <div class="ot-label" id="otDeliveryLabel">Çatdırılma</div>
-      <div class="ot-sub" id="otDeliverySub">Ünvanınıza</div>
+    <div class="sidebar-premium">
+      <div class="crown">👑</div>
+      <h4>Premium Plan Aktivdir</h4>
+      <p>Limitsiz imkanlar</p>
     </div>
-    <div class="order-type-card" onclick="selectOrderType('dine')">
-      <div class="ot-icon">🍽️</div>
-      <div class="ot-label" id="otDineLabel">Restoranda</div>
-      <div class="ot-sub" id="otDineSub">Stolda yemək</div>
-    </div>
-  </div>
-</div>
+  </aside>
 
-<!-- CHECKOUT MODAL -->
-<div class="modal" id="checkoutModal">
-  <div class="modal-handle"></div>
-  <button class="btn-back" onclick="backToOrderType()">← Geri</button>
-  <div class="modal-title" id="checkoutTitle">Sifariş məlumatları</div>
+  <!-- ===== MAIN ===== -->
+  <div class="main">
 
-  <!-- Cart summary -->
-  <div class="cart-items-list" id="checkoutItems"></div>
-  <div class="cart-total-row"><span id="totalLabel">Cəmi</span><span id="checkoutTotal">0.00 ₼</span></div>
-
-  <!-- DELIVERY FORM -->
-  <div class="form-section" id="deliveryForm">
-    <div class="form-title" id="deliveryFormTitle">📍 Çatdırılma məlumatları</div>
-    <div class="field-group"><label id="nameLabel">Ad Soyad</label><input type="text" id="d_name" placeholder="Adınızı daxil edin"></div>
-    <div class="field-group"><label id="phoneLabel">Telefon</label><input type="tel" id="d_phone" placeholder="+994 XX XXX XX XX"></div>
-    <div class="field-group"><label id="addressLabel">Ünvan</label><textarea id="d_address" placeholder="Dəqiq ünvanı yazın (küçə, ev, mənzil)"></textarea></div>
-    <div class="field-group"><label id="noteLabel">Qeyd</label><textarea id="d_note" placeholder="Əlavə qeyd (istəyə görə)"></textarea></div>
-  </div>
-
-  <!-- DINE FORM -->
-  <div class="form-section" id="dineForm">
-    <div class="form-title" id="dineFormTitle">🪑 Restoran məlumatları</div>
-    <div class="field-group"><label id="tableLabel2">Stol nömrəsi</label><input type="text" id="r_table" placeholder="Məs: 5 və ya VIP-1"></div>
-    <div class="field-group"><label id="guestLabel">Ad (istəyə görə)</label><input type="text" id="r_name" placeholder="Adınız"></div>
-    <div class="field-group"><label id="rNoteLabel">Qeyd</label><textarea id="r_note" placeholder="Xüsusi istəklər..."></textarea></div>
-  </div>
-
-  <button class="btn-primary" id="placeOrderBtn" onclick="placeOrder()">Sifarişi Göndər →</button>
-  <div class="success-screen" id="successScreen">
-    <div class="s-icon">✅</div>
-    <h3 id="successTitle">Sifarişiniz qəbul edildi!</h3>
-    <p id="successSub">Tezliklə sizinlə əlaqə saxlanılacaq. Təşəkkür edirik!</p>
-  </div>
-</div>
-
-<!-- SETTINGS PANEL -->
-<div class="settings-panel" id="settingsPanel">
-  <div class="settings-header">
-    <h2 id="settingsTitle">⚙️ Ayarlar</h2>
-    <button class="close-btn" onclick="closeSettings()">✕</button>
-  </div>
-  <div class="settings-body">
-    <div class="settings-section">
-      <h3 id="langSectionTitle">Dil / Language</h3>
-      <div class="lang-grid">
-        <div class="lang-card active" onclick="setLang('az')" id="langAz">
-          <div class="lc-flag">🇦🇿</div><div class="lc-name">Azərbaycan</div>
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div class="topbar-left">
+        <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
+        <span class="page-title" id="pageTitle">Ana Panel</span>
+      </div>
+      <div class="topbar-right">
+        <div class="system-status">
+          <div class="status-dot"></div>
+          <span>Sistem aktivdir</span>
         </div>
-        <div class="lang-card" onclick="setLang('tr')" id="langTr">
-          <div class="lc-flag">🇹🇷</div><div class="lc-name">Türkçe</div>
-        </div>
-        <div class="lang-card" onclick="setLang('en')" id="langEn">
-          <div class="lc-flag">🇺🇸</div><div class="lc-name">English</div>
+        <button class="notif-btn" onclick="toggleNotifDropdown()">
+          <i class="fas fa-bell"></i>
+          <span class="notif-count" id="notifCount">3</span>
+        </button>
+        <div class="admin-info" onclick="navigate('profile')">
+          <div class="admin-avatar" id="topAdminAvatar">A</div>
+          <span>Admin</span>
+          <i class="fas fa-chevron-down"></i>
         </div>
       </div>
     </div>
+
+    <!-- CONTENT WRAP -->
+    <div class="content-wrap">
+
+      <!-- CENTER CONTENT -->
+      <div class="content" id="mainContent">
+
+        <!-- ===== ANA PANEL ===== -->
+        <div class="page active" id="page-dashboard">
+
+          <!-- Profil Banner -->
+          <div class="profile-banner glass-card" style="margin-bottom:16px;">
+            <div class="profile-logo-wrap">
+              <div class="profile-logo" id="profileLogoDisplay">
+                <i class="fas fa-crown" style="font-size:36px;color:var(--gold);"></i>
+              </div>
+              <div class="logo-cam-btn" onclick="document.getElementById('logoUpload').click()">
+                <i class="fas fa-camera"></i>
+              </div>
+              <input type="file" id="logoUpload" accept="image/*" style="display:none" onchange="uploadLogo(this)">
+            </div>
+            <div class="profile-info">
+              <h2 id="restName">No Name Restaurant <i class="fas fa-check-circle verified"></i></h2>
+              <p id="restDesc">Dadlı anlar, unudulmaz təcrübə...</p>
+              <div class="profile-meta">
+                <span class="meta-item"><i class="fas fa-map-marker-alt"></i><span id="restAddress">Şəki, Azərbaycan</span></span>
+                <span class="meta-item"><i class="fas fa-phone"></i><span id="restPhone">+994 50 123 45 67</span></span>
+                <span class="meta-item"><i class="fab fa-instagram"></i><span id="restInsta">@noname.restaurant</span></span>
+              </div>
+              <button class="edit-btn" onclick="openProfileEdit()"><i class="fas fa-pencil-alt"></i> Redaktə Et</button>
+            </div>
+          </div>
+
+          <!-- Stats Grid -->
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-icon"><i class="fas fa-utensils"></i></div>
+              <div class="stat-info">
+                <h3>Ümumi Yeməklər</h3>
+                <div class="big-num" id="statMenuCount">0</div>
+                <div class="change green">↑ real məlumat</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon"><i class="fas fa-shopping-bag"></i></div>
+              <div class="stat-info">
+                <h3>Gələn Sifarişlər</h3>
+                <div class="big-num" id="statOrderCount">0</div>
+                <div class="change green" id="statNewOrders">↑ yeni</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
+              <div class="stat-info">
+                <h3>Ümumi Gəlir</h3>
+                <div class="big-num" id="statRevenue">0 ₼</div>
+                <div class="change green" id="statRevenueChange">↑ bu gün</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon"><i class="fas fa-star"></i></div>
+              <div class="stat-info">
+                <h3>Müştəri Reytinqi</h3>
+                <div class="big-num" id="statRating">4.9</div>
+                <div class="change gold">★★★★★</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Orders Table -->
+          <div class="glass-card" style="margin-bottom:16px;">
+            <div class="card-title">
+              <i class="fas fa-list-alt"></i> Son Sifarişlər
+              <button class="btn-outline" style="margin-left:auto;" onclick="navigate('orders')">Bütün Sifarişlər →</button>
+            </div>
+            <div class="table-wrap">
+              <table class="orders-table">
+                <thead>
+                  <tr>
+                    <th>№</th><th>Müştəri</th><th>Sifariş</th>
+                    <th>Məbləğ</th><th>Növ</th><th>Status</th><th>Saat</th>
+                  </tr>
+                </thead>
+                <tbody id="dashOrdersBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Bottom Cards -->
+          <div class="bottom-grid">
+            <!-- Revenue Chart -->
+            <div class="glass-card">
+              <div class="card-title"><i class="fas fa-chart-area"></i> Gəlir Statistikası
+                <select class="mini-select" id="revenueFilter" onchange="updateRevenueChart()">
+                  <option value="7">Son 7 gün</option>
+                  <option value="30">Son 30 gün</option>
+                </select>
+              </div>
+              <div class="revenue-summary">
+                <div><span class="rev-label">Günlük</span><span class="rev-val" id="dailyRev">0 ₼</span></div>
+                <div><span class="rev-label">Həftəlik</span><span class="rev-val" id="weeklyRev">0 ₼</span></div>
+                <div><span class="rev-label">Aylıq</span><span class="rev-val" id="monthlyRev">0 ₼</span></div>
+              </div>
+              <canvas id="revenueChart" height="120"></canvas>
+            </div>
+
+            <!-- Donut Chart -->
+            <div class="glass-card">
+              <div class="card-title"><i class="fas fa-chart-pie"></i> Sifariş Mənbəyi</div>
+              <div class="donut-wrap">
+                <canvas id="donutChart" width="160" height="160"></canvas>
+                <div class="donut-legend">
+                  <div><span class="dot" style="background:var(--gold)"></span> Restoranda <b id="dinePercent">54%</b></div>
+                  <div><span class="dot" style="background:#555"></span> Çatdırılma <b id="deliveryPercent">46%</b></div>
+                  <div class="donut-total" id="donutTotal">128 Sifariş</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Menu Categories -->
+            <div class="glass-card">
+              <div class="card-title"><i class="fas fa-th-large"></i> Menyu Kateqoriyaları
+                <button class="btn-outline" style="margin-left:auto;font-size:11px;" onclick="navigate('menu')">Bütününü Gör →</button>
+              </div>
+              <div class="cat-grid" id="categoryGrid"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== MENYU BÖLMƏSİ ===== -->
+        <div class="page" id="page-menu">
+          <div class="glass-card">
+            <div class="card-title">
+              <i class="fas fa-utensils"></i> Menyu İdarəetməsi
+              <button class="btn-gold" style="margin-left:auto;" onclick="openAddFood()">+ Yemək Əlavə Et</button>
+            </div>
+            <div class="menu-filters">
+              <button class="filter-btn active" onclick="filterMenu('all',this)">Hamısı</button>
+              <button class="filter-btn" onclick="filterMenu('Kabablar',this)">Kabablar</button>
+              <button class="filter-btn" onclick="filterMenu('Pizzalar',this)">Pizzalar</button>
+              <button class="filter-btn" onclick="filterMenu('Salatlar',this)">Salatlar</button>
+              <button class="filter-btn" onclick="filterMenu('Şorbalar',this)">Şorbalar</button>
+              <button class="filter-btn" onclick="filterMenu('Desertlər',this)">Desertlər</button>
+              <button class="filter-btn" onclick="filterMenu('İçkilər',this)">İçkilər</button>
+            </div>
+            <div class="menu-grid" id="menuGrid"></div>
+          </div>
+        </div>
+
+        <!-- ===== SİFARİŞLƏR ===== -->
+        <div class="page" id="page-orders">
+          <div class="glass-card">
+            <div class="card-title"><i class="fas fa-shopping-cart"></i> Bütün Sifarişlər</div>
+            <div class="order-filters">
+              <select class="mini-select" id="orderTypeFilter" onchange="renderOrdersPage()">
+                <option value="all">Bütün Növlər</option>
+                <option value="delivery">Çatdırılma</option>
+                <option value="dine">Restoranda</option>
+              </select>
+              <select class="mini-select" id="orderStatusFilter" onchange="renderOrdersPage()">
+                <option value="all">Bütün Statuslar</option>
+                <option value="Yeni">Yeni</option>
+                <option value="Qəbul Edildi">Qəbul Edildi</option>
+                <option value="Hazırlanır">Hazırlanır</option>
+                <option value="Yoldadır">Yoldadır</option>
+                <option value="Tamamlandı">Tamamlandı</option>
+                <option value="Ləğv Edildi">Ləğv Edildi</option>
+              </select>
+            </div>
+            <div class="table-wrap">
+              <table class="orders-table">
+                <thead>
+                  <tr><th>№</th><th>Müştəri</th><th>Sifariş</th><th>Məbləğ</th><th>Növ</th><th>Status</th><th>Saat</th><th>Ətraflı</th></tr>
+                </thead>
+                <tbody id="ordersPageBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== MÜŞTƏRİLƏR ===== -->
+        <div class="page" id="page-customers">
+          <div class="glass-card">
+            <div class="card-title"><i class="fas fa-users"></i> Müştərilər</div>
+            <div class="table-wrap">
+              <table class="orders-table">
+                <thead>
+                  <tr><th>Ad</th><th>Telefon</th><th>Sifariş Sayı</th><th>Ümumi Alış</th><th>Son Sifariş</th></tr>
+                </thead>
+                <tbody id="customersBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== XƏRİTƏ ===== -->
+        <div class="page" id="page-map">
+          <div class="glass-card">
+            <div class="card-title"><i class="fas fa-map"></i> Çatdırılma Xəritəsi</div>
+            <div id="deliveryMap" style="height:500px;border-radius:10px;overflow:hidden;"></div>
+          </div>
+        </div>
+
+        <!-- ===== STATİSTİKA ===== -->
+        <div class="page" id="page-stats">
+          <div class="stats-page-grid">
+            <div class="glass-card">
+              <div class="card-title"><i class="fas fa-chart-line"></i> Gəlir Qrafiki</div>
+              <canvas id="statsRevenueChart" height="200"></canvas>
+            </div>
+            <div class="glass-card">
+              <div class="card-title"><i class="fas fa-fire"></i> Ən Çox Satılan Yeməklər</div>
+              <div id="topFoodsList"></div>
+            </div>
+            <div class="glass-card">
+              <div class="card-title"><i class="fas fa-chart-bar"></i> Sifariş Növləri</div>
+              <canvas id="statsDonutChart" width="200" height="200"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== PARAMETRLƏR ===== -->
+        <div class="page" id="page-settings">
+          <div class="glass-card settings-card">
+            <div class="card-title"><i class="fas fa-cog"></i> Parametrlər</div>
+            <div class="settings-grid">
+              <div class="setting-group">
+                <label>Açılış Saatı</label>
+                <input type="time" id="openTime" value="09:00" class="setting-input">
+              </div>
+              <div class="setting-group">
+                <label>Bağlanış Saatı</label>
+                <input type="time" id="closeTime" value="23:00" class="setting-input">
+              </div>
+              <div class="setting-group">
+                <label>Çatdırılma Haqqı (₼)</label>
+                <input type="number" id="deliveryFee" value="2.50" step="0.5" class="setting-input">
+              </div>
+              <div class="setting-group">
+                <label>Minimum Sifariş (₼)</label>
+                <input type="number" id="minOrder" value="5" class="setting-input">
+              </div>
+              <div class="setting-group">
+                <label>Valyuta</label>
+                <select id="currency" class="setting-input">
+                  <option value="₼">₼ Manat (AZN)</option>
+                  <option value="$">$ Dollar (USD)</option>
+                  <option value="₺">₺ Lirə (TRY)</option>
+                  <option value="€">€ Euro (EUR)</option>
+                </select>
+              </div>
+              <div class="setting-group">
+                <label>Tema</label>
+                <select id="themeSelect" class="setting-input" onchange="changeTheme(this.value)">
+                  <option value="dark">Qaranlıq (Dark)</option>
+                  <option value="light">İşıqlı (Light)</option>
+                </select>
+              </div>
+              <div class="setting-group full">
+                <label>Bildirişlər</label>
+                <div class="toggle-row">
+                  <label class="toggle-label">Yeni sifariş bildirişi</label>
+                  <label class="toggle"><input type="checkbox" checked><span class="slider"></span></label>
+                </div>
+                <div class="toggle-row">
+                  <label class="toggle-label">Səs bildirişi</label>
+                  <label class="toggle"><input type="checkbox" checked><span class="slider"></span></label>
+                </div>
+              </div>
+            </div>
+            <button class="btn-gold" onclick="saveSettings()">💾 Yadda Saxla</button>
+          </div>
+        </div>
+
+        <!-- ===== PROFİL AYARLARI ===== -->
+        <div class="page" id="page-profile">
+          <div class="glass-card settings-card">
+            <div class="card-title"><i class="fas fa-user-circle"></i> Profil Ayarları</div>
+            <div class="profile-edit-form">
+              <div class="avatar-upload-wrap">
+                <div class="big-avatar" id="bigAvatar">A</div>
+                <button class="btn-outline" onclick="document.getElementById('avatarUpload').click()">
+                  <i class="fas fa-camera"></i> Şəkil Dəyiş
+                </button>
+                <input type="file" id="avatarUpload" accept="image/*" style="display:none" onchange="uploadAvatar(this)">
+              </div>
+              <div class="settings-grid">
+                <div class="setting-group">
+                  <label>İstifadəçi Adı</label>
+                  <input type="text" id="adminUsername" value="Admin" class="setting-input">
+                </div>
+                <div class="setting-group">
+                  <label>E-poçt</label>
+                  <input type="email" id="adminEmail" value="admin@noname.az" class="setting-input">
+                </div>
+                <div class="setting-group">
+                  <label>Cari Şifrə</label>
+                  <input type="password" id="currentPass" placeholder="••••••" class="setting-input">
+                </div>
+                <div class="setting-group">
+                  <label>Yeni Şifrə</label>
+                  <input type="password" id="newPass" placeholder="••••••" class="setting-input">
+                </div>
+              </div>
+              <button class="btn-gold" onclick="saveProfile()">💾 Profili Yenilə</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== DİLLƏR ===== -->
+        <div class="page" id="page-languages">
+          <div class="glass-card">
+            <div class="card-title"><i class="fas fa-globe"></i> Dil Seçimi</div>
+            <div class="lang-grid">
+              <div class="lang-card active" onclick="setLang('az',this)">🇦🇿 Azərbaycan</div>
+              <div class="lang-card" onclick="setLang('tr',this)">🇹🇷 Türk</div>
+              <div class="lang-card" onclick="setLang('en',this)">🇬🇧 English</div>
+              <div class="lang-card" onclick="setLang('ar',this)">🇸🇦 العربية</div>
+              <div class="lang-card" onclick="setLang('ru',this)">🇷🇺 Русский</div>
+              <div class="lang-card" onclick="setLang('de',this)">🇩🇪 Deutsch</div>
+              <div class="lang-card" onclick="setLang('zh',this)">🇨🇳 中文</div>
+              <div class="lang-card" onclick="setLang('fr',this)">🇫🇷 Français</div>
+              <div class="lang-card" onclick="setLang('es',this)">🇪🇸 Español</div>
+              <div class="lang-card" onclick="setLang('it',this)">🇮🇹 Italiano</div>
+              <div class="lang-card" onclick="setLang('fa',this)">🇮🇷 فارسی</div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /content -->
+
+      <!-- ===== SAĞ PANEL ===== -->
+      <aside class="right-panel" id="rightPanel">
+
+        <!-- Cover Photo -->
+        <div class="cover-card glass-card">
+          <div class="card-title"><i class="fas fa-eye"></i> Restoranın Görünüşü (Önizləmə)</div>
+          <div class="cover-img-wrap" id="coverImgWrap">
+            <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&q=80" id="coverImg" alt="Cover">
+            <div class="cover-overlay">
+              <button class="cover-btn" onclick="document.getElementById('coverUpload').click()">
+                <i class="fas fa-camera"></i> Dəyiş
+              </button>
+            </div>
+          </div>
+          <div class="cover-actions">
+            <button class="cover-action-btn" onclick="document.getElementById('coverUpload').click()">
+              <i class="fas fa-upload"></i> Yüklə
+            </button>
+            <button class="cover-action-btn" onclick="previewCover()">
+              <i class="fas fa-eye"></i> Önizlə
+            </button>
+            <button class="cover-action-btn" onclick="deleteCover()">
+              <i class="fas fa-trash"></i> Sil
+            </button>
+          </div>
+          <input type="file" id="coverUpload" accept="image/*" style="display:none" onchange="uploadCover(this)">
+        </div>
+
+        <!-- New Order Panel -->
+        <div class="glass-card new-order-card" id="newOrderCard">
+          <div class="card-title">
+            <i class="fas fa-motorcycle"></i>
+            <span id="newOrderNum">Yeni Sifariş #1028</span>
+            <span class="status-badge new" style="margin-left:auto;">Yeni</span>
+          </div>
+          <div class="order-type-row">
+            <i class="fas fa-truck" style="color:var(--gold)"></i>
+            <span id="newOrderType">Çatdırılma</span>
+          </div>
+          <div class="order-customer-info">
+            <div><i class="fas fa-user"></i> <span id="newOrderCustomer">Aysel Əliyeva</span></div>
+            <div><i class="fas fa-phone"></i> <span id="newOrderPhone">050 123 45 67</span></div>
+          </div>
+          <div id="newOrderMapWrap" style="height:130px;border-radius:10px;overflow:hidden;margin:10px 0;"></div>
+          <a class="map-link-btn" id="mapOpenLink" href="#" target="_blank">
+            <i class="fas fa-map"></i> Xəritədə Aç
+          </a>
+          <div class="order-note">
+            <i class="fas fa-sticky-note"></i>
+            <span id="newOrderNote">Zəng etməyin, qapıya gəlin.</span>
+          </div>
+          <div class="order-items" id="newOrderItems"></div>
+          <div class="order-total">
+            Ümumi Məbləğ: <span id="newOrderTotal" style="color:var(--gold);font-weight:800;">34.00 ₼</span>
+          </div>
+          <div class="order-action-btns">
+            <button class="btn-accept" onclick="acceptOrder()"><i class="fas fa-check"></i> Qəbul Et</button>
+            <button class="btn-prepare" onclick="prepareOrder()"><i class="fas fa-fire"></i> Hazırlanır</button>
+          </div>
+        </div>
+
+      </aside>
+
+    </div><!-- /content-wrap -->
+  </div><!-- /main -->
+</div><!-- /app -->
+
+<!-- ===== MODALS ===== -->
+
+<!-- Profile Edit Modal -->
+<div class="modal-overlay" id="profileEditModal">
+  <div class="modal glass-card">
+    <div class="modal-header">
+      <h3><i class="fas fa-edit"></i> Restoran Məlumatlarını Redaktə Et</h3>
+      <button onclick="closeModal('profileEditModal')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="settings-grid">
+      <div class="setting-group full">
+        <label>Restoranın Adı</label>
+        <input type="text" id="editRestName" class="setting-input">
+      </div>
+      <div class="setting-group full">
+        <label>Qısa Təqdimat</label>
+        <input type="text" id="editRestDesc" class="setting-input">
+      </div>
+      <div class="setting-group">
+        <label>Ünvan</label>
+        <input type="text" id="editRestAddress" class="setting-input">
+      </div>
+      <div class="setting-group">
+        <label>Telefon</label>
+        <input type="text" id="editRestPhone" class="setting-input">
+      </div>
+      <div class="setting-group full">
+        <label>Instagram</label>
+        <input type="text" id="editRestInsta" class="setting-input">
+      </div>
+    </div>
+    <button class="btn-gold" onclick="saveProfileEdit()">💾 Yadda Saxla</button>
   </div>
 </div>
 
-<script>
-// ═══════════════════════════════════════════════════════
-// TRANSLATIONS
-// ═══════════════════════════════════════════════════════
-const T = {
-  az: {
-    cats: [{id:'all',label:'🍽️ Hamısı'},{id:'sabah',label:'🌅 Səhər'},{id:'shorba',label:'🍲 Şorba'},{id:'isti',label:'🔥 İsti'},{id:'kabab',label:'🍖 Kabab'},{id:'salat',label:'🥗 Salat'},{id:'desert',label:'🍯 Desert'},{id:'icki',label:'🥤 İçki'}],
-    cartBtn:'Sifarişə bax', total:'Cəmi',
-    orderTypeTitle:'Sifariş növünü seçin',
-    otDelivery:'Çatdırılma', otDeliverySub:'Ünvanınıza',
-    otDine:'Restoranda', otDineSub:'Stolda yemək',
-    deliveryTitle:'📍 Çatdırılma məlumatları',
-    dineTitle:'🪑 Restoran məlumatları',
-    nameL:'Ad Soyad', phoneL:'Telefon', addressL:'Ünvan', noteL:'Qeyd',
-    tableL:'Stol nömrəsi', guestL:'Ad (istəyə görə)', rNoteL:'Qeyd',
-    placeOrder:'Sifarişi Göndər →',
-    successTitle:'Sifarişiniz qəbul edildi!',
-    successSub:'Tezliklə sizinlə əlaqə saxlanılacaq. Təşəkkür edirik!',
-    back:'← Geri', settingsTitle:'⚙️ Ayarlar', langTitle:'Dil / Language',
-    outOfStock:'Stokda yoxdur', popular:'⭐ Populyar',
-    checkoutTitleDelivery:'Çatdırılma sifarişi', checkoutTitleDine:'Restoran sifarişi',
-    errName:'Adı daxil edin', errPhone:'Telefonu daxil edin', errAddress:'Ünvanı daxil edin', errTable:'Stol nömrəsini daxil edin',
-  },
-  tr: {
-    cats: [{id:'all',label:'🍽️ Tümü'},{id:'sabah',label:'🌅 Kahvaltı'},{id:'shorba',label:'🍲 Çorba'},{id:'isti',label:'🔥 Sıcak'},{id:'kabab',label:'🍖 Kebap'},{id:'salat',label:'🥗 Salata'},{id:'desert',label:'🍯 Tatlı'},{id:'icki',label:'🥤 İçecek'}],
-    cartBtn:'Siparişe Bak', total:'Toplam',
-    orderTypeTitle:'Sipariş türünü seçin',
-    otDelivery:'Teslimat', otDeliverySub:'Adresinize',
-    otDine:'Restoranda', otDineSub:'Masada yemek',
-    deliveryTitle:'📍 Teslimat bilgileri',
-    dineTitle:'🪑 Restoran bilgileri',
-    nameL:'Ad Soyad', phoneL:'Telefon', addressL:'Adres', noteL:'Not',
-    tableL:'Masa numarası', guestL:'Ad (isteğe bağlı)', rNoteL:'Not',
-    placeOrder:'Siparişi Gönder →',
-    successTitle:'Siparişiniz alındı!',
-    successSub:'En kısa sürede sizinle iletişime geçeceğiz. Teşekkürler!',
-    back:'← Geri', settingsTitle:'⚙️ Ayarlar', langTitle:'Dil / Language',
-    outOfStock:'Stokta yok', popular:'⭐ Popüler',
-    checkoutTitleDelivery:'Teslimat siparişi', checkoutTitleDine:'Restoran siparişi',
-    errName:'Adı girin', errPhone:'Telefonu girin', errAddress:'Adresi girin', errTable:'Masa numarasını girin',
-  },
-  en: {
-    cats: [{id:'all',label:'🍽️ All'},{id:'sabah',label:'🌅 Breakfast'},{id:'shorba',label:'🍲 Soup'},{id:'isti',label:'🔥 Hot'},{id:'kabab',label:'🍖 Kebab'},{id:'salat',label:'🥗 Salad'},{id:'desert',label:'🍯 Dessert'},{id:'icki',label:'🥤 Drinks'}],
-    cartBtn:'View Order', total:'Total',
-    orderTypeTitle:'Select order type',
-    otDelivery:'Delivery', otDeliverySub:'To your address',
-    otDine:'Dine In', otDineSub:'At the table',
-    deliveryTitle:'📍 Delivery details',
-    dineTitle:'🪑 Restaurant details',
-    nameL:'Full Name', phoneL:'Phone', addressL:'Address', noteL:'Note',
-    tableL:'Table number', guestL:'Name (optional)', rNoteL:'Note',
-    placeOrder:'Place Order →',
-    successTitle:'Order received!',
-    successSub:'We will contact you shortly. Thank you!',
-    back:'← Back', settingsTitle:'⚙️ Settings', langTitle:'Language',
-    outOfStock:'Out of stock', popular:'⭐ Popular',
-    checkoutTitleDelivery:'Delivery order', checkoutTitleDine:'Dine-in order',
-    errName:'Enter name', errPhone:'Enter phone', errAddress:'Enter address', errTable:'Enter table number',
-  }
-};
-
-// ═══════════════════════════════════════════════════════
-// DEFAULT MENU (müştəri oxuya bilər, dəyişə bilməz)
-// ═══════════════════════════════════════════════════════
-const DEFAULT_MENU = [
-  {id:1,cat:'sabah',name:'Kənd Qəhvaltısı',desc:'Yumurta, pendir, kərə yağı, çörək',price:8.50,emoji:'🍳',popular:true},
-  {id:2,cat:'sabah',name:'Menemen',desc:'Pomidor, biber, yumurta, soğan',price:6.00,emoji:'🥚'},
-  {id:3,cat:'shorba',name:'Düşbərə',desc:'Dana əti, xəmir, qaymaq',price:5.50,emoji:'🍲',popular:true},
-  {id:4,cat:'shorba',name:'Piti',desc:'Qoyun əti, noxud, şabalıd soğanı',price:7.00,emoji:'🥣'},
-  {id:5,cat:'shorba',name:'Kəllə-paça',desc:'Ənənəvi Azərbaycan şorbası',price:8.00,emoji:'🍜'},
-  {id:6,cat:'isti',name:'Lülə Kabab',desc:'Dana əti, soğan, ədviyyat',price:12.50,emoji:'🥩',popular:true},
-  {id:7,cat:'isti',name:'Plov',desc:'Basmati düyü, quzuəti, şaftalı',price:14.00,emoji:'🍚'},
-  {id:8,cat:'isti',name:'Dolma',desc:'Üzüm yarpağı, ətin ü, düyü',price:9.50,emoji:'🫙'},
-  {id:9,cat:'kabab',name:'Tike Kabab',desc:'Dana filesi, mangalda bişirilmiş',price:18.00,emoji:'🍖',popular:true},
-  {id:10,cat:'kabab',name:'Toyuq Kabab',desc:'Marinadlı toyuq, cəfəri sousu ilə',price:13.00,emoji:'🍗'},
-  {id:11,cat:'kabab',name:'Balıq Mangal',desc:'Tazə qızılbalıq, limon, dərəotu',price:22.00,emoji:'🐟'},
-  {id:12,cat:'salat',name:'Çoban Salatı',desc:'Pomidor, xiyar, soğan, zəytun yağı',price:5.00,emoji:'🥗'},
-  {id:13,cat:'salat',name:'Cəzar Salat',desc:'Romen, kruton, parmezan',price:7.50,emoji:'🥙'},
-  {id:14,cat:'desert',name:'Baklava',desc:'Cevizli, ballı, xırtıldayan',price:4.50,emoji:'🍯',popular:true},
-  {id:15,cat:'desert',name:'Şəkərbura',desc:'Ənənəvi bayram şirnisi',price:3.50,emoji:'🥮'},
-  {id:16,cat:'icki',name:'Çay',desc:'Azərbaycan armudu çayı',price:2.00,emoji:'☕'},
-  {id:17,cat:'icki',name:'Ayran',desc:'Soyuq, təzə çalınmış',price:2.50,emoji:'🥛'},
-  {id:18,cat:'icki',name:'Limonad',desc:'Ev limonadı, nanə, limon',price:4.00,emoji:'🍋',outOfStock:true},
-];
-
-// READ-ONLY: admin tərəfindən saxlanmış menyu yalnız oxunur
-function getMenu() {
-  try {
-    const saved = localStorage.getItem('nn_menu');
-    if (saved) return JSON.parse(saved);
-  } catch(e){}
-  return DEFAULT_MENU;
-}
-
-// ═══════════════════════════════════════════════════════
-// STATE
-// ═══════════════════════════════════════════════════════
-let lang = localStorage.getItem('nn_lang') || 'az';
-let activeCat = 'all';
-let cart = {};
-let currentOrderType = null;
-let pendingItemId = null;
-
-// ═══════════════════════════════════════════════════════
-// THEME
-// ═══════════════════════════════════════════════════════
-function initTheme() {
-  const saved = localStorage.getItem('nn_theme') || 'dark';
-  document.documentElement.setAttribute('data-theme', saved);
-  document.getElementById('themeBtn').textContent = saved === 'dark' ? '☀️' : '🌙';
-}
-function toggleTheme() {
-  const cur = document.documentElement.getAttribute('data-theme');
-  const next = cur === 'dark' ? 'light' : 'dark';
-  document.documentElement.setAttribute('data-theme', next);
-  localStorage.setItem('nn_theme', next);
-  document.getElementById('themeBtn').textContent = next === 'dark' ? '☀️' : '🌙';
-}
-
-// ═══════════════════════════════════════════════════════
-// SETTINGS
-// ═══════════════════════════════════════════════════════
-function openSettings() {
-  document.getElementById('settingsPanel').classList.add('show');
-}
-function closeSettings() {
-  document.getElementById('settingsPanel').classList.remove('show');
-}
-function setLang(l) {
-  lang = l;
-  localStorage.setItem('nn_lang', l);
-  ['az','tr','en'].forEach(code => {
-    document.getElementById('lang'+code.charAt(0).toUpperCase()+code.slice(1))?.classList.toggle('active', code===l);
-  });
-  applyTranslations();
-  renderCats();
-  renderMenu();
-}
-
-function applyTranslations() {
-  const t = T[lang];
-  const el = (id, txt) => { const e = document.getElementById(id); if(e) e.textContent = txt; };
-  el('cartBarLabel', t.cartBtn);
-  el('otTitle', t.orderTypeTitle);
-  el('otDeliveryLabel', t.otDelivery);
-  el('otDeliverySub', t.otDeliverySub);
-  el('otDineLabel', t.otDine);
-  el('otDineSub', t.otDineSub);
-  el('deliveryFormTitle', t.deliveryTitle);
-  el('dineFormTitle', t.dineTitle);
-  el('nameLabel', t.nameL);
-  el('phoneLabel', t.phoneL);
-  el('addressLabel', t.addressL);
-  el('noteLabel', t.noteL);
-  el('tableLabel2', t.tableL);
-  el('guestLabel', t.guestL);
-  el('rNoteLabel', t.rNoteL);
-  el('placeOrderBtn', t.placeOrder);
-  el('totalLabel', t.total);
-  el('settingsTitle', t.settingsTitle);
-  el('langSectionTitle', t.langTitle);
-  el('successTitle', t.successTitle);
-  el('successSub', t.successSub);
-}
-
-// ═══════════════════════════════════════════════════════
-// RENDER
-// ═══════════════════════════════════════════════════════
-function renderCats() {
-  const cats = T[lang].cats;
-  document.getElementById('catBar').innerHTML = cats.map(c =>
-    `<button class="cat-btn${activeCat===c.id?' active':''}" onclick="setCat('${c.id}')">${c.label}</button>`
-  ).join('');
-}
-
-function renderMenu() {
-  const menu = getMenu();
-  const t = T[lang];
-  const filtered = menu.filter(it => activeCat==='all' || it.cat===activeCat);
-
-  if (!filtered.length) {
-    document.getElementById('menuContent').innerHTML = `<div class="empty">🍽️<br><br>Nəticə tapılmadı</div>`;
-    return;
-  }
-
-  let html = '';
-  if (activeCat === 'all') {
-    T[lang].cats.slice(1).forEach(cat => {
-      const ci = filtered.filter(it => it.cat===cat.id);
-      if (!ci.length) return;
-      html += `<div class="section-title">${cat.label}</div>`;
-      html += ci.map(item => renderCard(item, t)).join('');
-    });
-  } else {
-    html = filtered.map(item => renderCard(item, t)).join('');
-  }
-  document.getElementById('menuContent').innerHTML = html;
-}
-
-function renderCard(item, t) {
-  const qty = cart[item.id] || 0;
-  const dis = item.outOfStock ? 'style="opacity:.4;pointer-events:none"' : '';
-  const badge = item.outOfStock
-    ? `<span class="food-badge badge-out">${t.outOfStock}</span>`
-    : item.popular ? `<span class="food-badge badge-pop">${t.popular}</span>` : '';
-  const imgContent = item.imageUrl
-    ? `<img src="${item.imageUrl}" alt="${item.name}" onerror="this.parentElement.innerHTML='${item.emoji}'">`
-    : item.emoji;
-  const ctrl = item.outOfStock ? '' : qty > 0
-    ? `<div class="qty-ctrl">
-        <button onclick="changeQty(${item.id},-1)">−</button>
-        <span>${qty}</span>
-        <button onclick="addToCartWithCheck(${item.id})">+</button>
-       </div>`
-    : `<button class="add-btn" onclick="addToCartWithCheck(${item.id})">+</button>`;
-  return `<div class="food-card" ${dis}>
-    <div class="food-img">${imgContent}</div>
-    <div class="food-info">
-      <div class="food-name">${item.name}</div>
-      <div class="food-desc">${item.desc}</div>
-      <div class="food-bottom">
-        <div><div class="food-price">${item.price.toFixed(2)} ₼</div>${badge}</div>
-        ${ctrl}
+<!-- Add/Edit Food Modal -->
+<div class="modal-overlay" id="foodModal">
+  <div class="modal glass-card">
+    <div class="modal-header">
+      <h3 id="foodModalTitle"><i class="fas fa-plus"></i> Yemək Əlavə Et</h3>
+      <button onclick="closeModal('foodModal')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="food-modal-body">
+      <div class="food-img-upload" onclick="document.getElementById('foodImgInput').click()">
+        <img id="foodImgPreview" src="" alt="" style="display:none;width:100%;height:100%;object-fit:cover;border-radius:10px;">
+        <div id="foodImgPlaceholder"><i class="fas fa-camera" style="font-size:32px;color:var(--gold);"></i><p>Şəkil yüklə</p></div>
+      </div>
+      <input type="file" id="foodImgInput" accept="image/*" style="display:none" onchange="previewFoodImg(this)">
+      <input type="hidden" id="foodEditId" value="">
+      <div class="settings-grid">
+        <div class="setting-group full">
+          <label>Yeməyin Adı</label>
+          <input type="text" id="foodName" class="setting-input" placeholder="məs. Kabab">
+        </div>
+        <div class="setting-group">
+          <label>Qiymət (₼)</label>
+          <input type="number" id="foodPrice" class="setting-input" placeholder="0.00" step="0.5">
+        </div>
+        <div class="setting-group">
+          <label>Kateqoriya</label>
+          <select id="foodCategory" class="setting-input">
+            <option>Kabablar</option>
+            <option>Pizzalar</option>
+            <option>Salatlar</option>
+            <option>Şorbalar</option>
+            <option>Desertlər</option>
+            <option>İçkilər</option>
+          </select>
+        </div>
+        <div class="setting-group full">
+          <label>Açıqlama</label>
+          <textarea id="foodDesc" class="setting-input" rows="2" placeholder="Yeməyin təsviri..."></textarea>
+        </div>
+        <div class="setting-group">
+          <label class="check-label">
+            <input type="checkbox" id="foodPopular"> 🔥 Populyar
+          </label>
+        </div>
+        <div class="setting-group">
+          <label class="check-label">
+            <input type="checkbox" id="foodOutOfStock"> ❌ Stokda yox
+          </label>
+        </div>
       </div>
     </div>
-  </div>`;
-}
+    <button class="btn-gold" onclick="saveFood()">💾 Yadda Saxla</button>
+  </div>
+</div>
 
-// ═══════════════════════════════════════════════════════
-// CART & ORDER FLOW
-// ═══════════════════════════════════════════════════════
-function addToCartWithCheck(id) {
-  if (!currentOrderType) {
-    // ilk dəfə — order type modal aç
-    pendingItemId = id;
-    openOrderTypeModal(id);
-  } else {
-    // artıq order type seçilib
-    changeQty(id, 1);
-  }
-}
+<!-- Order Detail Modal -->
+<div class="modal-overlay" id="orderDetailModal">
+  <div class="modal glass-card">
+    <div class="modal-header">
+      <h3><i class="fas fa-receipt"></i> Sifariş Detalları</h3>
+      <button onclick="closeModal('orderDetailModal')"><i class="fas fa-times"></i></button>
+    </div>
+    <div id="orderDetailContent"></div>
+  </div>
+</div>
 
-function openOrderTypeModal(id) {
-  const menu = getMenu();
-  const item = menu.find(i => i.id === id);
-  const t = T[lang];
-  document.getElementById('otTitle').textContent = t.orderTypeTitle;
-  document.getElementById('otDeliveryLabel').textContent = t.otDelivery;
-  document.getElementById('otDeliverySub').textContent = t.otDeliverySub;
-  document.getElementById('otDineLabel').textContent = t.otDine;
-  document.getElementById('otDineSub').textContent = t.otDineSub;
-  if (item) {
-    document.getElementById('pendingItemInfo').innerHTML =
-      `<b>${item.emoji} ${item.name}</b> — ${item.price.toFixed(2)} ₼`;
-  }
-  showModal('orderTypeModal');
-}
+<!-- Cover Preview Modal -->
+<div class="modal-overlay" id="coverPreviewModal">
+  <div class="modal glass-card" style="max-width:700px;">
+    <div class="modal-header">
+      <h3><i class="fas fa-eye"></i> Üz Qabığı Önizləməsi</h3>
+      <button onclick="closeModal('coverPreviewModal')"><i class="fas fa-times"></i></button>
+    </div>
+    <img id="coverPreviewImg" src="" alt="Cover Preview" style="width:100%;border-radius:10px;">
+  </div>
+</div>
 
-function selectOrderType(type) {
-  currentOrderType = type;
-  if (pendingItemId !== null) {
-    changeQty(pendingItemId, 1);
-    pendingItemId = null;
-  }
-  closeModals();
-}
+<!-- Toast -->
+<div class="toast" id="toast"></div>
 
-function changeQty(id, delta) {
-  cart[id] = (cart[id] || 0) + delta;
-  if (cart[id] <= 0) delete cart[id];
-  renderMenu();
-  updateCartBar();
-}
-
-function updateCartBar() {
-  const menu = getMenu();
-  let count = 0, total = 0;
-  Object.entries(cart).forEach(([id, qty]) => {
-    const item = menu.find(i => i.id == id);
-    if (item) { count += qty; total += item.price * qty; }
-  });
-  const bar = document.getElementById('cartBar');
-  if (count > 0) {
-    bar.classList.add('show');
-    document.getElementById('cartCount').textContent = count;
-    document.getElementById('cartBarLabel').textContent = T[lang].cartBtn;
-    document.getElementById('cartBarTotal').textContent = total.toFixed(2) + ' ₼';
-  } else {
-    bar.classList.remove('show');
-  }
-}
-
-function openCart() {
-  const menu = getMenu();
-  const t = T[lang];
-  let total = 0;
-  const rows = Object.entries(cart).map(([id, qty]) => {
-    const item = menu.find(i => i.id == id);
-    if (!item) return '';
-    const sub = item.price * qty;
-    total += sub;
-    return `<div class="cart-item-row">
-      <div class="cart-item-info">${item.emoji} ${item.name}
-        <span style="color:var(--text-muted);font-size:12px"> ×${qty}</span>
-      </div>
-      <div class="qty-ctrl" style="gap:6px">
-        <button onclick="changeQty(${item.id},-1);openCart()" style="width:26px;height:26px;font-size:14px">−</button>
-        <span style="font-size:13px">${qty}</span>
-        <button onclick="changeQty(${item.id},1);openCart()" style="width:26px;height:26px;font-size:14px">+</button>
-      </div>
-      <div class="cart-item-price">${sub.toFixed(2)} ₼</div>
-    </div>`;
-  }).join('');
-
-  document.getElementById('cartContent').innerHTML = `
-    <div class="modal-title">🛒 ${t.cartBtn}</div>
-    <div class="cart-items-list">${rows || '<div style="color:var(--text-muted);text-align:center;padding:20px">Səbət boşdur</div>'}</div>
-    <div class="cart-total-row"><span>${t.total}</span><span>${total.toFixed(2)} ₼</span></div>
-    <button class="btn-primary" onclick="proceedToCheckout()" ${!Object.keys(cart).length?'disabled style="opacity:.5"':''}>${t.placeOrder}</button>
-    <button class="btn-secondary" onclick="closeModals()">← Menyuya qayıt</button>
-  `;
-  showModal('cartModal');
-}
-
-function proceedToCheckout() {
-  if (!currentOrderType) {
-    closeModals();
-    setTimeout(() => showModal('orderTypeModal'), 100);
-    return;
-  }
-  buildCheckout();
-  closeModals();
-  setTimeout(() => showModal('checkoutModal'), 100);
-}
-
-function buildCheckout() {
-  const menu = getMenu();
-  const t = T[lang];
-  let total = 0;
-  const rows = Object.entries(cart).map(([id, qty]) => {
-    const item = menu.find(i => i.id == id);
-    if (!item) return '';
-    const sub = item.price * qty;
-    total += sub;
-    return `<div class="cart-item-row">
-      <div class="cart-item-info">${item.emoji} ${item.name} ×${qty}</div>
-      <div class="cart-item-price">${sub.toFixed(2)} ₼</div>
-    </div>`;
-  }).join('');
-  document.getElementById('checkoutItems').innerHTML = rows;
-  document.getElementById('checkoutTotal').textContent = total.toFixed(2) + ' ₼';
-  document.getElementById('totalLabel').textContent = t.total;
-  document.getElementById('placeOrderBtn').textContent = t.placeOrder;
-  document.getElementById('checkoutTitle').textContent = currentOrderType === 'delivery' ? t.checkoutTitleDelivery : t.checkoutTitleDine;
-  document.getElementById('successTitle').textContent = t.successTitle;
-  document.getElementById('successSub').textContent = t.successSub;
-
-  // form göstər/gizlə
-  document.getElementById('deliveryForm').classList.toggle('show', currentOrderType === 'delivery');
-  document.getElementById('dineForm').classList.toggle('show', currentOrderType === 'dine');
-
-  // labels
-  document.getElementById('deliveryFormTitle').textContent = t.deliveryTitle;
-  document.getElementById('dineFormTitle').textContent = t.dineTitle;
-  document.getElementById('nameLabel').textContent = t.nameL;
-  document.getElementById('phoneLabel').textContent = t.phoneL;
-  document.getElementById('addressLabel').textContent = t.addressL;
-  document.getElementById('noteLabel').textContent = t.noteL;
-  document.getElementById('tableLabel2').textContent = t.tableL;
-  document.getElementById('guestLabel').textContent = t.guestL;
-  document.getElementById('rNoteLabel').textContent = t.rNoteL;
-
-  document.getElementById('successScreen').style.display = 'none';
-  document.getElementById('placeOrderBtn').style.display = '';
-}
-
-function backToOrderType() {
-  closeModals();
-  setTimeout(() => showModal('orderTypeModal'), 100);
-}
-
-function placeOrder() {
-  const t = T[lang];
-  const menu = getMenu();
-  let orderData = {};
-
-  if (currentOrderType === 'delivery') {
-    const name = document.getElementById('d_name').value.trim();
-    const phone = document.getElementById('d_phone').value.trim();
-    const address = document.getElementById('d_address').value.trim();
-    if (!name) { alert(t.errName); return; }
-    if (!phone) { alert(t.errPhone); return; }
-    if (!address) { alert(t.errAddress); return; }
-    orderData = { type:'delivery', name, phone, address, note: document.getElementById('d_note').value.trim() };
-  } else {
-    const table = document.getElementById('r_table').value.trim();
-    if (!table) { alert(t.errTable); return; }
-    orderData = { type:'dine', table, guestName: document.getElementById('r_name').value.trim(), note: document.getElementById('r_note').value.trim() };
-  }
-
-  let total = 0;
-  const items = Object.entries(cart).map(([id, qty]) => {
-    const item = menu.find(i => i.id == id);
-    if (!item) return null;
-    total += item.price * qty;
-    return { id, name: item.name, price: item.price, qty };
-  }).filter(Boolean);
-
-  const order = { id: Date.now(), ...orderData, items, total, time: new Date().toLocaleTimeString('az-AZ'), date: new Date().toLocaleDateString('az-AZ'), status: 'new', lang };
-
-  const orders = JSON.parse(localStorage.getItem('nn_orders') || '[]');
-  orders.unshift(order);
-  localStorage.setItem('nn_orders', JSON.stringify(orders));
-
-  cart = {};
-  updateCartBar();
-  renderMenu();
-
-  document.getElementById('placeOrderBtn').style.display = 'none';
-  document.getElementById('deliveryForm').style.display = 'none';
-  document.getElementById('dineForm').style.display = 'none';
-  document.getElementById('successScreen').style.display = 'block';
-  setTimeout(closeModals, 3500);
-}
-
-// ═══════════════════════════════════════════════════════
-// MODAL UTILS
-// ═══════════════════════════════════════════════════════
-function showModal(id) {
-  document.getElementById('overlay').classList.add('show');
-  document.getElementById(id).classList.add('show');
-}
-function closeModals() {
-  document.getElementById('overlay').classList.remove('show');
-  ['cartModal','orderTypeModal','checkoutModal'].forEach(id => {
-    document.getElementById(id).classList.remove('show');
-  });
-}
-function setCat(id) { activeCat = id; renderCats(); renderMenu(); }
-
-// ═══════════════════════════════════════════════════════
-// INIT
-// ═══════════════════════════════════════════════════════
-initTheme();
-applyTranslations();
-renderCats();
-renderMenu();
-// dil kartlarını aktiv et
-['az','tr','en'].forEach(code => {
-  const key = 'lang' + code.charAt(0).toUpperCase() + code.slice(1);
-  document.getElementById(key)?.classList.toggle('active', code === lang);
-});
-</script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
