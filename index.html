@@ -1,605 +1,879 @@
 <!DOCTYPE html>
 <html lang="az">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>No Name Restaurant – Admin Panel</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>No Name Restaurant – Admin Panel</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="app" id="app">
+<!-- PAGE BACKGROUND -->
+<div class="page-bg">
+    <div class="page-bg-img"></div>
+    <div class="page-bg-overlay"></div>
+</div>
 
-  <!-- ===== SIDEBAR ===== -->
-  <aside class="sidebar" id="sidebar">
-    <div class="sidebar-logo">
-      <div class="logo-icon"><i class="fas fa-crown"></i></div>
-      <h2>No Name</h2>
-      <span>Restaurant</span>
-    </div>
+<!-- ADMIN LAYOUT -->
+<div class="admin-layout">
 
-    <nav class="nav-section">
-      <div class="nav-item active" data-page="dashboard">
-        <i class="fas fa-home"></i><span>Ana Panel</span>
-      </div>
-      <div class="nav-item" data-page="menu">
-        <i class="fas fa-utensils"></i><span>Menyu</span>
-      </div>
-      <div class="nav-item" data-page="orders">
-        <i class="fas fa-shopping-cart"></i><span>Sifarişlər</span>
-        <span class="nav-badge" id="orderBadge">3</span>
-      </div>
-      <div class="nav-item" data-page="customers">
-        <i class="fas fa-users"></i><span>Müştərilər</span>
-      </div>
-      <div class="nav-item" data-page="map">
-        <i class="fas fa-map-marker-alt"></i><span>Çatdırılma Xəritəsi</span>
-      </div>
-      <div class="nav-item" data-page="stats">
-        <i class="fas fa-chart-bar"></i><span>Statistika</span>
-      </div>
-      <div class="nav-item" data-page="settings">
-        <i class="fas fa-cog"></i><span>Parametrlər</span>
-      </div>
-      <div class="nav-item" data-page="profile">
-        <i class="fas fa-user-circle"></i><span>Profil Ayarları</span>
-      </div>
-      <div class="nav-item" data-page="languages">
-        <i class="fas fa-globe"></i><span>Dillər</span>
-      </div>
-      <div class="nav-item" id="logoutBtn">
-        <i class="fas fa-sign-out-alt"></i><span>Çıxış</span>
-      </div>
-    </nav>
+    <!-- ══════════════ SIDEBAR ══════════════ -->
+    <aside class="sidebar" id="sidebar">
 
-    <div class="sidebar-premium">
-      <div class="crown">👑</div>
-      <h4>Premium Plan Aktivdir</h4>
-      <p>Limitsiz imkanlar</p>
-    </div>
-  </aside>
-
-  <!-- ===== MAIN ===== -->
-  <div class="main">
-
-    <!-- TOPBAR -->
-    <div class="topbar">
-      <div class="topbar-left">
-        <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
-        <span class="page-title" id="pageTitle">Ana Panel</span>
-      </div>
-      <div class="topbar-right">
-        <div class="system-status">
-          <div class="status-dot"></div>
-          <span>Sistem aktivdir</span>
-        </div>
-        <button class="notif-btn" onclick="toggleNotifDropdown()">
-          <i class="fas fa-bell"></i>
-          <span class="notif-count" id="notifCount">3</span>
-        </button>
-        <div class="admin-info" onclick="navigate('profile')">
-          <div class="admin-avatar" id="topAdminAvatar">A</div>
-          <span>Admin</span>
-          <i class="fas fa-chevron-down"></i>
-        </div>
-      </div>
-    </div>
-
-    <!-- CONTENT WRAP -->
-    <div class="content-wrap">
-
-      <!-- CENTER CONTENT -->
-      <div class="content" id="mainContent">
-
-        <!-- ===== ANA PANEL ===== -->
-        <div class="page active" id="page-dashboard">
-
-          <!-- Profil Banner -->
-          <div class="profile-banner glass-card" style="margin-bottom:16px;">
-            <div class="profile-logo-wrap">
-              <div class="profile-logo" id="profileLogoDisplay">
-                <i class="fas fa-crown" style="font-size:36px;color:var(--gold);"></i>
-              </div>
-              <div class="logo-cam-btn" onclick="document.getElementById('logoUpload').click()">
-                <i class="fas fa-camera"></i>
-              </div>
-              <input type="file" id="logoUpload" accept="image/*" style="display:none" onchange="uploadLogo(this)">
+        <div class="sb-logo-wrap">
+            <div class="sb-logo-icon">
+                <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="30" cy="30" r="28" fill="rgba(0,0,0,0.5)" stroke="#D4AF37" stroke-width="1.5"/>
+                    <circle cx="20" cy="22" r="8" fill="#D4AF37"/>
+                    <circle cx="30" cy="19" r="9" fill="#D4AF37"/>
+                    <circle cx="40" cy="22" r="8" fill="#D4AF37"/>
+                    <rect x="17" y="27" width="26" height="12" fill="#D4AF37"/>
+                    <rect x="15" y="37" width="30" height="5" rx="2" fill="#8B6914"/>
+                </svg>
             </div>
-            <div class="profile-info">
-              <h2 id="restName">No Name Restaurant <i class="fas fa-check-circle verified"></i></h2>
-              <p id="restDesc">Dadlı anlar, unudulmaz təcrübə...</p>
-              <div class="profile-meta">
-                <span class="meta-item"><i class="fas fa-map-marker-alt"></i><span id="restAddress">Şəki, Azərbaycan</span></span>
-                <span class="meta-item"><i class="fas fa-phone"></i><span id="restPhone">+994 50 123 45 67</span></span>
-                <span class="meta-item"><i class="fab fa-instagram"></i><span id="restInsta">@noname.restaurant</span></span>
-              </div>
-              <button class="edit-btn" onclick="openProfileEdit()"><i class="fas fa-pencil-alt"></i> Redaktə Et</button>
+            <div class="sb-logo-text">
+                <span class="sb-logo-name">No Name</span>
+                <span class="sb-logo-sub">Restaurant</span>
             </div>
-          </div>
-
-          <!-- Stats Grid -->
-          <div class="stats-grid">
-            <div class="stat-card">
-              <div class="stat-icon"><i class="fas fa-utensils"></i></div>
-              <div class="stat-info">
-                <h3>Ümumi Yeməklər</h3>
-                <div class="big-num" id="statMenuCount">0</div>
-                <div class="change green">↑ real məlumat</div>
-              </div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-icon"><i class="fas fa-shopping-bag"></i></div>
-              <div class="stat-info">
-                <h3>Gələn Sifarişlər</h3>
-                <div class="big-num" id="statOrderCount">0</div>
-                <div class="change green" id="statNewOrders">↑ yeni</div>
-              </div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
-              <div class="stat-info">
-                <h3>Ümumi Gəlir</h3>
-                <div class="big-num" id="statRevenue">0 ₼</div>
-                <div class="change green" id="statRevenueChange">↑ bu gün</div>
-              </div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-icon"><i class="fas fa-star"></i></div>
-              <div class="stat-info">
-                <h3>Müştəri Reytinqi</h3>
-                <div class="big-num" id="statRating">4.9</div>
-                <div class="change gold">★★★★★</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Orders Table -->
-          <div class="glass-card" style="margin-bottom:16px;">
-            <div class="card-title">
-              <i class="fas fa-list-alt"></i> Son Sifarişlər
-              <button class="btn-outline" style="margin-left:auto;" onclick="navigate('orders')">Bütün Sifarişlər →</button>
-            </div>
-            <div class="table-wrap">
-              <table class="orders-table">
-                <thead>
-                  <tr>
-                    <th>№</th><th>Müştəri</th><th>Sifariş</th>
-                    <th>Məbləğ</th><th>Növ</th><th>Status</th><th>Saat</th>
-                  </tr>
-                </thead>
-                <tbody id="dashOrdersBody"></tbody>
-              </table>
-            </div>
-          </div>
-
-          <!-- Bottom Cards -->
-          <div class="bottom-grid">
-            <!-- Revenue Chart -->
-            <div class="glass-card">
-              <div class="card-title"><i class="fas fa-chart-area"></i> Gəlir Statistikası
-                <select class="mini-select" id="revenueFilter" onchange="updateRevenueChart()">
-                  <option value="7">Son 7 gün</option>
-                  <option value="30">Son 30 gün</option>
-                </select>
-              </div>
-              <div class="revenue-summary">
-                <div><span class="rev-label">Günlük</span><span class="rev-val" id="dailyRev">0 ₼</span></div>
-                <div><span class="rev-label">Həftəlik</span><span class="rev-val" id="weeklyRev">0 ₼</span></div>
-                <div><span class="rev-label">Aylıq</span><span class="rev-val" id="monthlyRev">0 ₼</span></div>
-              </div>
-              <canvas id="revenueChart" height="120"></canvas>
-            </div>
-
-            <!-- Donut Chart -->
-            <div class="glass-card">
-              <div class="card-title"><i class="fas fa-chart-pie"></i> Sifariş Mənbəyi</div>
-              <div class="donut-wrap">
-                <canvas id="donutChart" width="160" height="160"></canvas>
-                <div class="donut-legend">
-                  <div><span class="dot" style="background:var(--gold)"></span> Restoranda <b id="dinePercent">54%</b></div>
-                  <div><span class="dot" style="background:#555"></span> Çatdırılma <b id="deliveryPercent">46%</b></div>
-                  <div class="donut-total" id="donutTotal">128 Sifariş</div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Menu Categories -->
-            <div class="glass-card">
-              <div class="card-title"><i class="fas fa-th-large"></i> Menyu Kateqoriyaları
-                <button class="btn-outline" style="margin-left:auto;font-size:11px;" onclick="navigate('menu')">Bütününü Gör →</button>
-              </div>
-              <div class="cat-grid" id="categoryGrid"></div>
-            </div>
-          </div>
         </div>
 
-        <!-- ===== MENYU BÖLMƏSİ ===== -->
-        <div class="page" id="page-menu">
-          <div class="glass-card">
-            <div class="card-title">
-              <i class="fas fa-utensils"></i> Menyu İdarəetməsi
-              <button class="btn-gold" style="margin-left:auto;" onclick="openAddFood()">+ Yemək Əlavə Et</button>
+        <nav class="sb-nav">
+            <a href="#" class="nav-link active">
+                <i class="fas fa-home"></i><span>Ana Panel</span>
+            </a>
+            <a href="#" class="nav-link">
+                <i class="fas fa-utensils"></i><span>Menyu</span>
+            </a>
+            <a href="#" class="nav-link">
+                <i class="fas fa-shopping-cart"></i><span>Sifarişlər</span>
+                <span class="nav-badge">3</span>
+            </a>
+            <a href="#" class="nav-link">
+                <i class="fas fa-users"></i><span>Müştərilər</span>
+            </a>
+            <a href="#" class="nav-link">
+                <i class="fas fa-map-marker-alt"></i><span>Çatdırılma Xəritəsi</span>
+            </a>
+            <a href="#" class="nav-link">
+                <i class="fas fa-chart-bar"></i><span>Statistika</span>
+            </a>
+            <a href="#" class="nav-link">
+                <i class="fas fa-cog"></i><span>Parametrlər</span>
+            </a>
+            <a href="#" class="nav-link">
+                <i class="fas fa-user-cog"></i><span>Profil Ayarları</span>
+            </a>
+            <a href="#" class="nav-link">
+                <i class="fas fa-globe"></i><span>Dillər</span>
+            </a>
+            <a href="#" class="nav-link nav-logout">
+                <i class="fas fa-sign-out-alt"></i><span>Çıxış</span>
+            </a>
+        </nav>
+
+        <div class="sb-premium">
+            <div class="sb-premium-crown"><i class="fas fa-crown"></i></div>
+            <div class="sb-premium-info">
+                <strong>Premium Plan</strong>
+                <span>Aktivdir</span>
+                <small>Limitsiz imkanlar</small>
             </div>
-            <div class="menu-filters">
-              <button class="filter-btn active" onclick="filterMenu('all',this)">Hamısı</button>
-              <button class="filter-btn" onclick="filterMenu('Kabablar',this)">Kabablar</button>
-              <button class="filter-btn" onclick="filterMenu('Pizzalar',this)">Pizzalar</button>
-              <button class="filter-btn" onclick="filterMenu('Salatlar',this)">Salatlar</button>
-              <button class="filter-btn" onclick="filterMenu('Şorbalar',this)">Şorbalar</button>
-              <button class="filter-btn" onclick="filterMenu('Desertlər',this)">Desertlər</button>
-              <button class="filter-btn" onclick="filterMenu('İçkilər',this)">İçkilər</button>
-            </div>
-            <div class="menu-grid" id="menuGrid"></div>
-          </div>
         </div>
 
-        <!-- ===== SİFARİŞLƏR ===== -->
-        <div class="page" id="page-orders">
-          <div class="glass-card">
-            <div class="card-title"><i class="fas fa-shopping-cart"></i> Bütün Sifarişlər</div>
-            <div class="order-filters">
-              <select class="mini-select" id="orderTypeFilter" onchange="renderOrdersPage()">
-                <option value="all">Bütün Növlər</option>
-                <option value="delivery">Çatdırılma</option>
-                <option value="dine">Restoranda</option>
-              </select>
-              <select class="mini-select" id="orderStatusFilter" onchange="renderOrdersPage()">
-                <option value="all">Bütün Statuslar</option>
-                <option value="Yeni">Yeni</option>
-                <option value="Qəbul Edildi">Qəbul Edildi</option>
-                <option value="Hazırlanır">Hazırlanır</option>
-                <option value="Yoldadır">Yoldadır</option>
-                <option value="Tamamlandı">Tamamlandı</option>
-                <option value="Ləğv Edildi">Ləğv Edildi</option>
-              </select>
-            </div>
-            <div class="table-wrap">
-              <table class="orders-table">
-                <thead>
-                  <tr><th>№</th><th>Müştəri</th><th>Sifariş</th><th>Məbləğ</th><th>Növ</th><th>Status</th><th>Saat</th><th>Ətraflı</th></tr>
-                </thead>
-                <tbody id="ordersPageBody"></tbody>
-              </table>
-            </div>
-          </div>
-        </div>
+    </aside>
 
-        <!-- ===== MÜŞTƏRİLƏR ===== -->
-        <div class="page" id="page-customers">
-          <div class="glass-card">
-            <div class="card-title"><i class="fas fa-users"></i> Müştərilər</div>
-            <div class="table-wrap">
-              <table class="orders-table">
-                <thead>
-                  <tr><th>Ad</th><th>Telefon</th><th>Sifariş Sayı</th><th>Ümumi Alış</th><th>Son Sifariş</th></tr>
-                </thead>
-                <tbody id="customersBody"></tbody>
-              </table>
-            </div>
-          </div>
-        </div>
+    <!-- ══════════════ MAIN AREA ══════════════ -->
+    <div class="main-area">
 
-        <!-- ===== XƏRİTƏ ===== -->
-        <div class="page" id="page-map">
-          <div class="glass-card">
-            <div class="card-title"><i class="fas fa-map"></i> Çatdırılma Xəritəsi</div>
-            <div id="deliveryMap" style="height:500px;border-radius:10px;overflow:hidden;"></div>
-          </div>
-        </div>
-
-        <!-- ===== STATİSTİKA ===== -->
-        <div class="page" id="page-stats">
-          <div class="stats-page-grid">
-            <div class="glass-card">
-              <div class="card-title"><i class="fas fa-chart-line"></i> Gəlir Qrafiki</div>
-              <canvas id="statsRevenueChart" height="200"></canvas>
-            </div>
-            <div class="glass-card">
-              <div class="card-title"><i class="fas fa-fire"></i> Ən Çox Satılan Yeməklər</div>
-              <div id="topFoodsList"></div>
-            </div>
-            <div class="glass-card">
-              <div class="card-title"><i class="fas fa-chart-bar"></i> Sifariş Növləri</div>
-              <canvas id="statsDonutChart" width="200" height="200"></canvas>
-            </div>
-          </div>
-        </div>
-
-        <!-- ===== PARAMETRLƏR ===== -->
-        <div class="page" id="page-settings">
-          <div class="glass-card settings-card">
-            <div class="card-title"><i class="fas fa-cog"></i> Parametrlər</div>
-            <div class="settings-grid">
-              <div class="setting-group">
-                <label>Açılış Saatı</label>
-                <input type="time" id="openTime" value="09:00" class="setting-input">
-              </div>
-              <div class="setting-group">
-                <label>Bağlanış Saatı</label>
-                <input type="time" id="closeTime" value="23:00" class="setting-input">
-              </div>
-              <div class="setting-group">
-                <label>Çatdırılma Haqqı (₼)</label>
-                <input type="number" id="deliveryFee" value="2.50" step="0.5" class="setting-input">
-              </div>
-              <div class="setting-group">
-                <label>Minimum Sifariş (₼)</label>
-                <input type="number" id="minOrder" value="5" class="setting-input">
-              </div>
-              <div class="setting-group">
-                <label>Valyuta</label>
-                <select id="currency" class="setting-input">
-                  <option value="₼">₼ Manat (AZN)</option>
-                  <option value="$">$ Dollar (USD)</option>
-                  <option value="₺">₺ Lirə (TRY)</option>
-                  <option value="€">€ Euro (EUR)</option>
-                </select>
-              </div>
-              <div class="setting-group">
-                <label>Tema</label>
-                <select id="themeSelect" class="setting-input" onchange="changeTheme(this.value)">
-                  <option value="dark">Qaranlıq (Dark)</option>
-                  <option value="light">İşıqlı (Light)</option>
-                </select>
-              </div>
-              <div class="setting-group full">
-                <label>Bildirişlər</label>
-                <div class="toggle-row">
-                  <label class="toggle-label">Yeni sifariş bildirişi</label>
-                  <label class="toggle"><input type="checkbox" checked><span class="slider"></span></label>
-                </div>
-                <div class="toggle-row">
-                  <label class="toggle-label">Səs bildirişi</label>
-                  <label class="toggle"><input type="checkbox" checked><span class="slider"></span></label>
-                </div>
-              </div>
-            </div>
-            <button class="btn-gold" onclick="saveSettings()">💾 Yadda Saxla</button>
-          </div>
-        </div>
-
-        <!-- ===== PROFİL AYARLARI ===== -->
-        <div class="page" id="page-profile">
-          <div class="glass-card settings-card">
-            <div class="card-title"><i class="fas fa-user-circle"></i> Profil Ayarları</div>
-            <div class="profile-edit-form">
-              <div class="avatar-upload-wrap">
-                <div class="big-avatar" id="bigAvatar">A</div>
-                <button class="btn-outline" onclick="document.getElementById('avatarUpload').click()">
-                  <i class="fas fa-camera"></i> Şəkil Dəyiş
-                </button>
-                <input type="file" id="avatarUpload" accept="image/*" style="display:none" onchange="uploadAvatar(this)">
-              </div>
-              <div class="settings-grid">
-                <div class="setting-group">
-                  <label>İstifadəçi Adı</label>
-                  <input type="text" id="adminUsername" value="Admin" class="setting-input">
-                </div>
-                <div class="setting-group">
-                  <label>E-poçt</label>
-                  <input type="email" id="adminEmail" value="admin@noname.az" class="setting-input">
-                </div>
-                <div class="setting-group">
-                  <label>Cari Şifrə</label>
-                  <input type="password" id="currentPass" placeholder="••••••" class="setting-input">
-                </div>
-                <div class="setting-group">
-                  <label>Yeni Şifrə</label>
-                  <input type="password" id="newPass" placeholder="••••••" class="setting-input">
-                </div>
-              </div>
-              <button class="btn-gold" onclick="saveProfile()">💾 Profili Yenilə</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- ===== DİLLƏR ===== -->
-        <div class="page" id="page-languages">
-          <div class="glass-card">
-            <div class="card-title"><i class="fas fa-globe"></i> Dil Seçimi</div>
-            <div class="lang-grid">
-              <div class="lang-card active" onclick="setLang('az',this)">🇦🇿 Azərbaycan</div>
-              <div class="lang-card" onclick="setLang('tr',this)">🇹🇷 Türk</div>
-              <div class="lang-card" onclick="setLang('en',this)">🇬🇧 English</div>
-              <div class="lang-card" onclick="setLang('ar',this)">🇸🇦 العربية</div>
-              <div class="lang-card" onclick="setLang('ru',this)">🇷🇺 Русский</div>
-              <div class="lang-card" onclick="setLang('de',this)">🇩🇪 Deutsch</div>
-              <div class="lang-card" onclick="setLang('zh',this)">🇨🇳 中文</div>
-              <div class="lang-card" onclick="setLang('fr',this)">🇫🇷 Français</div>
-              <div class="lang-card" onclick="setLang('es',this)">🇪🇸 Español</div>
-              <div class="lang-card" onclick="setLang('it',this)">🇮🇹 Italiano</div>
-              <div class="lang-card" onclick="setLang('fa',this)">🇮🇷 فارسی</div>
-            </div>
-          </div>
-        </div>
-
-      </div><!-- /content -->
-
-      <!-- ===== SAĞ PANEL ===== -->
-      <aside class="right-panel" id="rightPanel">
-
-        <!-- Cover Photo -->
-        <div class="cover-card glass-card">
-          <div class="card-title"><i class="fas fa-eye"></i> Restoranın Görünüşü (Önizləmə)</div>
-          <div class="cover-img-wrap" id="coverImgWrap">
-            <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&q=80" id="coverImg" alt="Cover">
-            <div class="cover-overlay">
-              <button class="cover-btn" onclick="document.getElementById('coverUpload').click()">
-                <i class="fas fa-camera"></i> Dəyiş
-              </button>
-            </div>
-          </div>
-          <div class="cover-actions">
-            <button class="cover-action-btn" onclick="document.getElementById('coverUpload').click()">
-              <i class="fas fa-upload"></i> Yüklə
+        <!-- TOP BAR -->
+        <header class="topbar">
+            <button class="topbar-ham" id="hamburgerBtn">
+                <i class="fas fa-bars"></i>
             </button>
-            <button class="cover-action-btn" onclick="previewCover()">
-              <i class="fas fa-eye"></i> Önizlə
-            </button>
-            <button class="cover-action-btn" onclick="deleteCover()">
-              <i class="fas fa-trash"></i> Sil
-            </button>
-          </div>
-          <input type="file" id="coverUpload" accept="image/*" style="display:none" onchange="uploadCover(this)">
+            <div class="topbar-right">
+                <div class="sys-status">
+                    <span class="sys-dot"></span>
+                    <span>Sistem aktivdir</span>
+                </div>
+                <div class="notif-btn">
+                    <i class="fas fa-bell"></i>
+                    <span class="notif-badge">3</span>
+                </div>
+                <div class="topbar-admin">
+                    <div class="admin-ava">
+                        <img src="https://ui-avatars.com/api/?name=Admin&background=D4AF37&color=1a0a00&size=36&bold=true" alt="Admin">
+                    </div>
+                    <span class="admin-name-txt">Admin</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+            </div>
+        </header>
+
+        <!-- ══════════════ DASHBOARD ══════════════ -->
+        <div class="dashboard" id="dashboardSection">
+
+            <!-- CENTER COLUMN -->
+            <div class="dash-left">
+
+                <!-- Restaurant Profile Card -->
+                <div class="rest-profile glass-card">
+                    <div class="rp-bg" id="rpBgEl"></div>
+                    <div class="rp-bg-ov"></div>
+                    <div class="rp-body">
+                        <div class="rp-logo-wrap">
+                            <div class="rp-logo" id="rpLogoWrap">
+                                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="50" cy="50" r="48" fill="rgba(0,0,0,0.65)" stroke="#D4AF37" stroke-width="2.5"/>
+                                    <circle cx="34" cy="37" r="13" fill="#D4AF37"/>
+                                    <circle cx="50" cy="32" r="15" fill="#D4AF37"/>
+                                    <circle cx="66" cy="37" r="13" fill="#D4AF37"/>
+                                    <rect x="27" y="43" width="46" height="17" fill="#D4AF37"/>
+                                    <rect x="25" y="58" width="50" height="7" rx="2.5" fill="#8B6914"/>
+                                    <text x="50" y="76" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#D4AF37" font-weight="bold">No Name</text>
+                                    <text x="50" y="89" text-anchor="middle" font-family="Georgia,serif" font-size="7.5" fill="#D4AF37" font-style="italic">Restaurant</text>
+                                </svg>
+                            </div>
+                            <button class="rp-cam" id="profileCamBtn"><i class="fas fa-camera"></i></button>
+                        </div>
+                        <div class="rp-details">
+                            <div class="rp-name-row">
+                                <h2>No Name Restaurant</h2>
+                                <i class="fas fa-check-circle rp-verified"></i>
+                            </div>
+                            <p class="rp-tagline">Dadlı anlar, unudulmaz təcrübə…</p>
+                            <div class="rp-chips">
+                                <span class="rp-chip"><i class="fas fa-map-marker-alt"></i> Şəki, Azərbaycan</span>
+                                <span class="rp-chip"><i class="fas fa-phone"></i> +994 50 123 45 67</span>
+                                <span class="rp-chip"><i class="fab fa-instagram"></i> @noname.restaurant</span>
+                            </div>
+                        </div>
+                        <button class="rp-edit-btn"><i class="fas fa-pen"></i> Redaktə Et</button>
+                    </div>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-card glass-card">
+                        <div class="stat-ic"><i class="fas fa-utensils"></i></div>
+                        <div class="stat-inf">
+                            <span class="stat-lbl">Ümumi Yeməklər</span>
+                            <span class="stat-val">24</span>
+                            <span class="stat-chg up">↑ +2</span>
+                        </div>
+                    </div>
+                    <div class="stat-card glass-card">
+                        <div class="stat-ic"><i class="fas fa-shopping-bag"></i></div>
+                        <div class="stat-inf">
+                            <span class="stat-lbl">Gələn Sifarişlər</span>
+                            <span class="stat-val">128</span>
+                            <span class="stat-chg up">↑ +15</span>
+                        </div>
+                    </div>
+                    <div class="stat-card glass-card">
+                        <div class="stat-ic"><i class="fas fa-motorcycle"></i></div>
+                        <div class="stat-inf">
+                            <span class="stat-lbl">Aktiv Çatdırılmalar</span>
+                            <span class="stat-val">7</span>
+                            <span class="stat-chg up">↑ +3</span>
+                        </div>
+                    </div>
+                    <div class="stat-card glass-card">
+                        <div class="stat-ic"><i class="fas fa-star"></i></div>
+                        <div class="stat-inf">
+                            <span class="stat-lbl">Müştəri Reyləri</span>
+                            <span class="stat-val">4.9</span>
+                            <span class="stat-chg up">↑ +0.1</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Orders Table -->
+                <div class="orders-card glass-card">
+                    <div class="card-hdr">
+                        <div class="card-title">
+                            <i class="fas fa-clipboard-list ic-gold"></i>
+                            <h3>Son Sifarişlər</h3>
+                        </div>
+                        <button class="btn-gold-outline">Bütün Sifarişlər <i class="fas fa-arrow-right"></i></button>
+                    </div>
+                    <div class="tbl-wrap">
+                        <table class="orders-tbl">
+                            <thead>
+                                <tr>
+                                    <th>№</th>
+                                    <th>Müştəri</th>
+                                    <th>Sifariş</th>
+                                    <th>Məbləğ</th>
+                                    <th>Sifariş Növü</th>
+                                    <th>Status</th>
+                                    <th>Tarix</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="td-gold">#1028</td>
+                                    <td>Aysel Əliyeva</td>
+                                    <td>2 × Kabab, 1 × Plov</td>
+                                    <td class="td-gold">34.00 ₼</td>
+                                    <td><span class="ord-type delivery"><i class="fas fa-motorcycle"></i> Çatdırılma</span></td>
+                                    <td><span class="badge b-green">Qəbul Edildi</span></td>
+                                    <td>14:32</td>
+                                </tr>
+                                <tr>
+                                    <td class="td-gold">#1027</td>
+                                    <td>Rəşad Məmmədov</td>
+                                    <td>1 × Pizza</td>
+                                    <td class="td-gold">14.00 ₼</td>
+                                    <td><span class="ord-type dine-in"><i class="fas fa-utensils"></i> Restoranda</span></td>
+                                    <td><span class="badge b-blue">Hazırlanır</span></td>
+                                    <td>14:28</td>
+                                </tr>
+                                <tr>
+                                    <td class="td-gold">#1026</td>
+                                    <td>Nigar İsmayılova</td>
+                                    <td>1 × Şaşlıq</td>
+                                    <td class="td-gold">16.00 ₼</td>
+                                    <td><span class="ord-type delivery"><i class="fas fa-motorcycle"></i> Çatdırılma</span></td>
+                                    <td><span class="badge b-orange">Yolda</span></td>
+                                    <td>14:20</td>
+                                </tr>
+                                <tr>
+                                    <td class="td-gold">#1025</td>
+                                    <td>Tural Quliyev</td>
+                                    <td>1 × Plov</td>
+                                    <td class="td-gold">10.00 ₼</td>
+                                    <td><span class="ord-type dine-in"><i class="fas fa-utensils"></i> Restoranda</span></td>
+                                    <td><span class="badge b-gray">Tamamlandı</span></td>
+                                    <td>13:55</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Bottom Panels -->
+                <div class="bottom-row">
+
+                    <!-- Sifariş Statistikası -->
+                    <div class="panel-chart glass-card">
+                        <div class="card-hdr">
+                            <div class="card-title">
+                                <i class="fas fa-chart-line ic-gold"></i>
+                                <h3>Sifariş Statistikası</h3>
+                            </div>
+                            <select class="sel-sm">
+                                <option>Son 7 gün</option>
+                                <option>Son 30 gün</option>
+                            </select>
+                        </div>
+                        <svg viewBox="0 0 500 185" class="chart-svg" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <linearGradient id="cgrad" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" stop-color="#D4AF37" stop-opacity="0.35"/>
+                                    <stop offset="100%" stop-color="#D4AF37" stop-opacity="0.02"/>
+                                </linearGradient>
+                            </defs>
+                            <line x1="45" y1="18" x2="490" y2="18" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+                            <line x1="45" y1="50" x2="490" y2="50" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+                            <line x1="45" y1="82" x2="490" y2="82" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+                            <line x1="45" y1="114" x2="490" y2="114" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+                            <line x1="45" y1="146" x2="490" y2="146" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+                            <text x="40" y="22" text-anchor="end" fill="rgba(255,255,255,0.35)" font-size="10">50</text>
+                            <text x="40" y="54" text-anchor="end" fill="rgba(255,255,255,0.35)" font-size="10">40</text>
+                            <text x="40" y="86" text-anchor="end" fill="rgba(255,255,255,0.35)" font-size="10">30</text>
+                            <text x="40" y="118" text-anchor="end" fill="rgba(255,255,255,0.35)" font-size="10">20</text>
+                            <text x="40" y="150" text-anchor="end" fill="rgba(255,255,255,0.35)" font-size="10">10</text>
+                            <path d="M68,115 L136,100 L204,90 L272,75 L340,82 L408,57 L476,38 L476,146 L68,146 Z" fill="url(#cgrad)"/>
+                            <path d="M68,115 L136,100 L204,90 L272,75 L340,82 L408,57 L476,38" fill="none" stroke="#D4AF37" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <circle cx="68"  cy="115" r="4" fill="#D4AF37"/>
+                            <circle cx="136" cy="100" r="4" fill="#D4AF37"/>
+                            <circle cx="204" cy="90"  r="4" fill="#D4AF37"/>
+                            <circle cx="272" cy="75"  r="6" fill="#D4AF37" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
+                            <circle cx="340" cy="82"  r="4" fill="#D4AF37"/>
+                            <circle cx="408" cy="57"  r="4" fill="#D4AF37"/>
+                            <circle cx="476" cy="38"  r="4" fill="#D4AF37"/>
+                            <rect x="241" y="50" width="64" height="22" rx="6" fill="rgba(212,175,55,0.95)"/>
+                            <text x="273" y="65" text-anchor="middle" fill="#1a0a00" font-size="11" font-weight="700">28 sifariş</text>
+                            <line x1="273" y1="72" x2="273" y2="75" stroke="#D4AF37" stroke-width="1.5"/>
+                            <text x="68"  y="168" text-anchor="middle" fill="rgba(255,255,255,0.45)" font-size="11">B.e</text>
+                            <text x="136" y="168" text-anchor="middle" fill="rgba(255,255,255,0.45)" font-size="11">Ç.a</text>
+                            <text x="204" y="168" text-anchor="middle" fill="rgba(255,255,255,0.45)" font-size="11">Ç</text>
+                            <text x="272" y="168" text-anchor="middle" fill="rgba(255,255,255,0.45)" font-size="11">C.a</text>
+                            <text x="340" y="168" text-anchor="middle" fill="rgba(255,255,255,0.45)" font-size="11">C.</text>
+                            <text x="408" y="168" text-anchor="middle" fill="rgba(255,255,255,0.45)" font-size="11">Ş.</text>
+                            <text x="476" y="168" text-anchor="middle" fill="rgba(255,255,255,0.45)" font-size="11">B.</text>
+                        </svg>
+                    </div>
+
+                    <!-- Çatdırılma Vəziyyəti -->
+                    <div class="panel-delivery glass-card">
+                        <div class="card-hdr">
+                            <div class="card-title">
+                                <i class="fas fa-motorcycle ic-gold"></i>
+                                <h3>Çatdırılma Vəziyyəti</h3>
+                            </div>
+                        </div>
+                        <div class="del-list">
+                            <div class="del-item">
+                                <div class="del-ic ic-green"><i class="fas fa-motorcycle"></i></div>
+                                <div class="del-inf">
+                                    <span class="del-lbl">Aktiv</span>
+                                    <span class="del-val">7</span>
+                                </div>
+                                <div class="del-bar-bg">
+                                    <div class="del-bar" style="width:40%; background:#4ADE80;"></div>
+                                </div>
+                            </div>
+                            <div class="del-item">
+                                <div class="del-ic ic-blue"><i class="fas fa-check-circle"></i></div>
+                                <div class="del-inf">
+                                    <span class="del-lbl">Tamamlandı</span>
+                                    <span class="del-val">45</span>
+                                </div>
+                                <div class="del-bar-bg">
+                                    <div class="del-bar" style="width:80%; background:#60A5FA;"></div>
+                                </div>
+                            </div>
+                            <div class="del-item">
+                                <div class="del-ic ic-yellow"><i class="fas fa-clock"></i></div>
+                                <div class="del-inf">
+                                    <span class="del-lbl">Gözlənilir</span>
+                                    <span class="del-val">12</span>
+                                </div>
+                                <div class="del-bar-bg">
+                                    <div class="del-bar" style="width:55%; background:#FBB724;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Menyu Kateqoriyaları -->
+                    <div class="panel-menu-cats glass-card">
+                        <div class="card-hdr">
+                            <div class="card-title">
+                                <i class="fas fa-crown ic-gold"></i>
+                                <h3>Menyu Kateqoriyaları</h3>
+                            </div>
+                            <button class="btn-gold-outline">Bütününü Gör <i class="fas fa-arrow-right"></i></button>
+                        </div>
+                        <div class="cats-grid">
+                            <div class="cat-item">
+                                <div class="cat-img" style="background-image:url('https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=120&q=80')"></div>
+                                <span>Kabablar</span>
+                            </div>
+                            <div class="cat-item">
+                                <div class="cat-img" style="background-image:url('https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=120&q=80')"></div>
+                                <span>Pizzalar</span>
+                            </div>
+                            <div class="cat-item">
+                                <div class="cat-img" style="background-image:url('https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=120&q=80')"></div>
+                                <span>Salatlar</span>
+                            </div>
+                            <div class="cat-item">
+                                <div class="cat-img" style="background-image:url('https://images.unsplash.com/photo-1547592166-23ac45744acd?w=120&q=80')"></div>
+                                <span>Şorbalar</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- RIGHT COLUMN -->
+            <div class="dash-right">
+
+                <!-- Restoranın Görünüşü -->
+                <div class="preview-card glass-card">
+                    <div class="card-hdr">
+                        <div class="card-title">
+                            <i class="fas fa-eye ic-gold"></i>
+                            <h3>Restoranın Görünüşü <small>(Önizləmə)</small></h3>
+                        </div>
+                    </div>
+                    <div class="preview-inner">
+                        <div class="preview-bg-img" id="previewBgEl"></div>
+                        <div class="preview-logo-wrap" id="previewLogoEl">
+                            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="50" cy="50" r="48" fill="rgba(0,0,0,0.65)" stroke="#D4AF37" stroke-width="2.5"/>
+                                <circle cx="34" cy="37" r="13" fill="#D4AF37"/>
+                                <circle cx="50" cy="32" r="15" fill="#D4AF37"/>
+                                <circle cx="66" cy="37" r="13" fill="#D4AF37"/>
+                                <rect x="27" y="43" width="46" height="17" fill="#D4AF37"/>
+                                <rect x="25" y="58" width="50" height="7" rx="2.5" fill="#8B6914"/>
+                                <text x="50" y="76" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#D4AF37" font-weight="bold">No Name</text>
+                                <text x="50" y="89" text-anchor="middle" font-family="Georgia,serif" font-size="7.5" fill="#D4AF37" font-style="italic">Restaurant</text>
+                            </svg>
+                        </div>
+                    </div>
+                    <button class="btn-change-img" id="bgChangeBtn"><i class="fas fa-image"></i> Şəkilini Dəyişdir</button>
+                </div>
+
+                <!-- Yeni Sifariş -->
+                <div class="new-order glass-card">
+                    <div class="no-hdr">
+                        <div class="no-hdr-left">
+                            <div class="no-icon"><i class="fas fa-motorcycle"></i></div>
+                            <div>
+                                <span class="no-title">Yeni Sifariş #1028</span>
+                                <span class="no-type-lbl">Çatdırılma</span>
+                            </div>
+                        </div>
+                        <span class="badge-new">Yeni</span>
+                    </div>
+                    <div class="no-customer">
+                        <div class="no-row"><i class="fas fa-user ic-gold"></i><span>Aysel Əliyeva</span></div>
+                        <div class="no-row"><i class="fas fa-phone ic-gold"></i><span>050 123 45 67</span></div>
+                    </div>
+                    <div class="no-map">
+                        <div class="no-map-bg"></div>
+                        <div class="no-map-pin"><i class="fas fa-map-marker-alt"></i></div>
+                        <button class="no-map-btn"><i class="fas fa-map"></i> Xəritədə Bax</button>
+                    </div>
+                    <div class="no-addr">
+                        <i class="fas fa-map-marker-alt ic-gold"></i>
+                        <span>Şəki şəhəri, M.Ə. Rəsulzadə küçəsi bina 12, mənzil 48</span>
+                    </div>
+                    <div class="no-note">
+                        <i class="fas fa-sticky-note ic-gold"></i>
+                        <span>Qeyd: Zəng etməyin, qapıya gəlin.</span>
+                    </div>
+                    <div class="no-items">
+                        <div class="no-item">
+                            <div class="no-item-img" style="background-image:url('https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=80&q=80')"></div>
+                            <div class="no-item-inf">
+                                <span class="no-item-name">Kabab</span>
+                                <span class="no-item-qty">2 ədəd</span>
+                            </div>
+                            <span class="no-item-price">24.00 ₼</span>
+                        </div>
+                        <div class="no-item">
+                            <div class="no-item-img plov-img">🍚</div>
+                            <div class="no-item-inf">
+                                <span class="no-item-name">Plov</span>
+                                <span class="no-item-qty">1 ədəd</span>
+                            </div>
+                            <span class="no-item-price">10.00 ₼</span>
+                        </div>
+                    </div>
+                    <div class="no-total">
+                        <span>Ümumi Məbləğ:</span>
+                        <span class="no-total-amt">34.00 ₼</span>
+                    </div>
+                    <div class="no-actions">
+                        <button class="btn-accept"><i class="fas fa-check"></i> Qəbul Et</button>
+                        <button class="btn-prepare"><i class="fas fa-fire"></i> Hazırlanır</button>
+                    </div>
+                </div>
+
+            </div>
         </div>
+        <!-- ══ DASHBOARD BİTDİ ══ -->
 
-        <!-- New Order Panel -->
-        <div class="glass-card new-order-card" id="newOrderCard">
-          <div class="card-title">
-            <i class="fas fa-motorcycle"></i>
-            <span id="newOrderNum">Yeni Sifariş #1028</span>
-            <span class="status-badge new" style="margin-left:auto;">Yeni</span>
-          </div>
-          <div class="order-type-row">
-            <i class="fas fa-truck" style="color:var(--gold)"></i>
-            <span id="newOrderType">Çatdırılma</span>
-          </div>
-          <div class="order-customer-info">
-            <div><i class="fas fa-user"></i> <span id="newOrderCustomer">Aysel Əliyeva</span></div>
-            <div><i class="fas fa-phone"></i> <span id="newOrderPhone">050 123 45 67</span></div>
-          </div>
-          <div id="newOrderMapWrap" style="height:130px;border-radius:10px;overflow:hidden;margin:10px 0;"></div>
-          <a class="map-link-btn" id="mapOpenLink" href="#" target="_blank">
-            <i class="fas fa-map"></i> Xəritədə Aç
-          </a>
-          <div class="order-note">
-            <i class="fas fa-sticky-note"></i>
-            <span id="newOrderNote">Zəng etməyin, qapıya gəlin.</span>
-          </div>
-          <div class="order-items" id="newOrderItems"></div>
-          <div class="order-total">
-            Ümumi Məbləğ: <span id="newOrderTotal" style="color:var(--gold);font-weight:800;">34.00 ₼</span>
-          </div>
-          <div class="order-action-btns">
-            <button class="btn-accept" onclick="acceptOrder()"><i class="fas fa-check"></i> Qəbul Et</button>
-            <button class="btn-prepare" onclick="prepareOrder()"><i class="fas fa-fire"></i> Hazırlanır</button>
-          </div>
+        <!-- ══════════════ MENU SECTION ══════════════ -->
+        <div class="menu-section" id="menuSection">
+
+            <div class="section-topbar">
+                <div class="section-title-wrap">
+                    <i class="fas fa-utensils ic-gold" style="font-size:20px"></i>
+                    <div>
+                        <h2 class="section-h2">Menyu İdarəetməsi</h2>
+                        <p class="section-sub">Yeməklərinizi əlavə edin, redaktə edin və idarə edin</p>
+                    </div>
+                </div>
+                <div class="section-actions">
+                    <button class="btn-cats-manage" id="manageCatsBtn">
+                        <i class="fas fa-tags"></i> Kateqoriyalar
+                    </button>
+                    <button class="btn-add-food" id="addFoodBtn">
+                        <i class="fas fa-plus"></i> Yeni Yemək
+                    </button>
+                </div>
+            </div>
+
+            <div class="menu-stats-strip">
+                <div class="mss-item glass-card">
+                    <i class="fas fa-utensils mss-ic" style="color:var(--gold)"></i>
+                    <div class="mss-inf"><span class="mss-lbl">Ümumi</span><span class="mss-val" id="statTotal">0</span></div>
+                </div>
+                <div class="mss-item glass-card">
+                    <i class="fas fa-check-circle mss-ic" style="color:#4ADE80"></i>
+                    <div class="mss-inf"><span class="mss-lbl">Aktiv</span><span class="mss-val" style="color:#4ADE80" id="statActive">0</span></div>
+                </div>
+                <div class="mss-item glass-card">
+                    <i class="fas fa-times-circle mss-ic" style="color:#EF4444"></i>
+                    <div class="mss-inf"><span class="mss-lbl">Qeyri-aktiv</span><span class="mss-val" style="color:#EF4444" id="statInactive">0</span></div>
+                </div>
+                <div class="mss-item glass-card">
+                    <i class="fas fa-tags mss-ic" style="color:var(--gold)"></i>
+                    <div class="mss-inf"><span class="mss-lbl">Kateqoriyalar</span><span class="mss-val" style="color:var(--gold)" id="statCats">0</span></div>
+                </div>
+            </div>
+
+            <div class="menu-filter-bar glass-card">
+                <div class="mfb-search">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="menuSearchInput" placeholder="Yemək axtarın...">
+                </div>
+                <div class="mfb-tabs" id="statusTabs">
+                    <button class="mfb-tab active" data-status="all">Hamısı</button>
+                    <button class="mfb-tab" data-status="active">Aktiv</button>
+                    <button class="mfb-tab" data-status="inactive">Qeyri-aktiv</button>
+                </div>
+                <div class="mfb-catsel">
+                    <i class="fas fa-filter" style="color:var(--gold);font-size:12px"></i>
+                    <select id="catFilterSelect">
+                        <option value="all">Bütün kateqoriyalar</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="food-grid" id="foodGrid"></div>
+            <div class="food-empty" id="foodEmpty" style="display:none">
+                <i class="fas fa-utensils"></i>
+                <h3>Hələ yemək yoxdur</h3>
+                <p>Yeni yemək əlavə etmək üçün yuxarıdakı düyməyə basın</p>
+            </div>
+
         </div>
+        <!-- ══ MENU SECTION BİTDİ ══ -->
 
-      </aside>
-
-    </div><!-- /content-wrap -->
-  </div><!-- /main -->
-</div><!-- /app -->
-
-<!-- ===== MODALS ===== -->
-
-<!-- Profile Edit Modal -->
-<div class="modal-overlay" id="profileEditModal">
-  <div class="modal glass-card">
-    <div class="modal-header">
-      <h3><i class="fas fa-edit"></i> Restoran Məlumatlarını Redaktə Et</h3>
-      <button onclick="closeModal('profileEditModal')"><i class="fas fa-times"></i></button>
     </div>
-    <div class="settings-grid">
-      <div class="setting-group full">
-        <label>Restoranın Adı</label>
-        <input type="text" id="editRestName" class="setting-input">
-      </div>
-      <div class="setting-group full">
-        <label>Qısa Təqdimat</label>
-        <input type="text" id="editRestDesc" class="setting-input">
-      </div>
-      <div class="setting-group">
-        <label>Ünvan</label>
-        <input type="text" id="editRestAddress" class="setting-input">
-      </div>
-      <div class="setting-group">
-        <label>Telefon</label>
-        <input type="text" id="editRestPhone" class="setting-input">
-      </div>
-      <div class="setting-group full">
-        <label>Instagram</label>
-        <input type="text" id="editRestInsta" class="setting-input">
-      </div>
+    <!-- ══ MAIN AREA BİTDİ ══ -->
+
+</div>
+<!-- ══ ADMIN LAYOUT BİTDİ ══ -->
+
+<!-- ════════════════════════════════════
+     GİZLİ FILE INPUT-LAR
+════════════════════════════════════ -->
+<input type="file" id="profileFileInput" accept="image/*" style="display:none">
+<input type="file" id="bgFileInput"      accept="image/*" style="display:none">
+<input type="file" id="foodFileInput"    accept="image/*" style="display:none">
+
+<!-- ════════════════════════════════════
+     PROFİL ŞƏKLİ REDAKTƏ MODALI
+════════════════════════════════════ -->
+<div class="img-editor-overlay" id="profileEditorModal">
+    <div class="img-editor-modal">
+        <div class="img-editor-header">
+            <div class="img-editor-title">
+                <i class="fas fa-crop-alt ic-gold"></i>
+                <h3>Profil Şəkli Redaktəsi</h3>
+            </div>
+            <button class="img-editor-close" id="profileEditorClose"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="img-editor-body">
+            <div class="img-editor-left">
+                <div class="canvas-label"><i class="fas fa-hand-paper"></i> Şəkli sürükləyərək yerləşdirin</div>
+                <div class="canvas-container">
+                    <canvas id="profileCanvas" width="420" height="420" class="editor-canvas"></canvas>
+                </div>
+            </div>
+            <div class="img-editor-right">
+                <div class="preview-section">
+                    <div class="preview-title">Önizləmə</div>
+                    <div class="preview-circle-wrap">
+                        <canvas id="profilePreviewCanvas" width="120" height="120" class="preview-circle-canvas"></canvas>
+                    </div>
+                    <span class="preview-hint">Dairəvi kəsilmiş görünüş</span>
+                </div>
+                <div class="ctrl-panel">
+                    <div class="ctrl-group">
+                        <span class="ctrl-lbl"><i class="fas fa-search"></i> Böyütmə</span>
+                        <div class="ctrl-row">
+                            <button class="ctrl-btn" id="profileZoomOut"><i class="fas fa-search-minus"></i></button>
+                            <span class="ctrl-val" id="profileZoomVal">100%</span>
+                            <button class="ctrl-btn" id="profileZoomIn"><i class="fas fa-search-plus"></i></button>
+                        </div>
+                    </div>
+                    <div class="ctrl-group">
+                        <span class="ctrl-lbl"><i class="fas fa-sync-alt"></i> Fırlatma</span>
+                        <div class="ctrl-row">
+                            <button class="ctrl-btn" id="profileRotateL"><i class="fas fa-undo"></i></button>
+                            <span class="ctrl-val" id="profileRotateVal">0°</span>
+                            <button class="ctrl-btn" id="profileRotateR"><i class="fas fa-redo"></i></button>
+                        </div>
+                    </div>
+                    <div class="ctrl-group">
+                        <span class="ctrl-lbl"><i class="fas fa-arrows-alt"></i> Hərəkət</span>
+                        <div class="move-pad">
+                            <div class="move-row"><button class="ctrl-btn move-btn" id="profileMoveU"><i class="fas fa-arrow-up"></i></button></div>
+                            <div class="move-row">
+                                <button class="ctrl-btn move-btn" id="profileMoveL"><i class="fas fa-arrow-left"></i></button>
+                                <button class="ctrl-btn move-btn move-center" id="profileReset"><i class="fas fa-dot-circle"></i></button>
+                                <button class="ctrl-btn move-btn" id="profileMoveR"><i class="fas fa-arrow-right"></i></button>
+                            </div>
+                            <div class="move-row"><button class="ctrl-btn move-btn" id="profileMoveD"><i class="fas fa-arrow-down"></i></button></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="img-editor-footer">
+            <button class="btn-editor-cancel" id="profileCancel"><i class="fas fa-times"></i> Ləğv et</button>
+            <button class="btn-editor-save"   id="profileSave"><i class="fas fa-check"></i> Yadda saxla</button>
+        </div>
     </div>
-    <button class="btn-gold" onclick="saveProfileEdit()">💾 Yadda Saxla</button>
-  </div>
 </div>
 
-<!-- Add/Edit Food Modal -->
-<div class="modal-overlay" id="foodModal">
-  <div class="modal glass-card">
-    <div class="modal-header">
-      <h3 id="foodModalTitle"><i class="fas fa-plus"></i> Yemək Əlavə Et</h3>
-      <button onclick="closeModal('foodModal')"><i class="fas fa-times"></i></button>
+<!-- ════════════════════════════════════
+     ARXA FON REDAKTƏ MODALI
+════════════════════════════════════ -->
+<div class="img-editor-overlay" id="bgEditorModal">
+    <div class="img-editor-modal img-editor-modal-wide">
+        <div class="img-editor-header">
+            <div class="img-editor-title">
+                <i class="fas fa-image ic-gold"></i>
+                <h3>Arxa Fon Şəkli Redaktəsi</h3>
+            </div>
+            <button class="img-editor-close" id="bgEditorClose"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="img-editor-body">
+            <div class="img-editor-left img-editor-left-wide">
+                <div class="canvas-label"><i class="fas fa-hand-paper"></i> Geniş format üçün şəkli tənzimləyin</div>
+                <div class="canvas-container canvas-container-wide">
+                    <canvas id="bgCanvas" width="600" height="300" class="editor-canvas"></canvas>
+                </div>
+            </div>
+            <div class="img-editor-right">
+                <div class="preview-section">
+                    <div class="preview-title">Önizləmə</div>
+                    <div class="preview-wide-wrap">
+                        <canvas id="bgPreviewCanvas" width="230" height="92" class="preview-wide-canvas"></canvas>
+                    </div>
+                    <span class="preview-hint">Geniş ekran görünüşü</span>
+                </div>
+                <div class="ctrl-panel">
+                    <div class="ctrl-group">
+                        <span class="ctrl-lbl"><i class="fas fa-search"></i> Böyütmə</span>
+                        <div class="ctrl-row">
+                            <button class="ctrl-btn" id="bgZoomOut"><i class="fas fa-search-minus"></i></button>
+                            <span class="ctrl-val" id="bgZoomVal">100%</span>
+                            <button class="ctrl-btn" id="bgZoomIn"><i class="fas fa-search-plus"></i></button>
+                        </div>
+                    </div>
+                    <div class="ctrl-group">
+                        <span class="ctrl-lbl"><i class="fas fa-sync-alt"></i> Fırlatma</span>
+                        <div class="ctrl-row">
+                            <button class="ctrl-btn" id="bgRotateL"><i class="fas fa-undo"></i></button>
+                            <span class="ctrl-val" id="bgRotateVal">0°</span>
+                            <button class="ctrl-btn" id="bgRotateR"><i class="fas fa-redo"></i></button>
+                        </div>
+                    </div>
+                    <div class="ctrl-group">
+                        <span class="ctrl-lbl"><i class="fas fa-arrows-alt"></i> Hərəkət</span>
+                        <div class="move-pad">
+                            <div class="move-row"><button class="ctrl-btn move-btn" id="bgMoveU"><i class="fas fa-arrow-up"></i></button></div>
+                            <div class="move-row">
+                                <button class="ctrl-btn move-btn" id="bgMoveL"><i class="fas fa-arrow-left"></i></button>
+                                <button class="ctrl-btn move-btn move-center" id="bgReset"><i class="fas fa-dot-circle"></i></button>
+                                <button class="ctrl-btn move-btn" id="bgMoveR"><i class="fas fa-arrow-right"></i></button>
+                            </div>
+                            <div class="move-row"><button class="ctrl-btn move-btn" id="bgMoveD"><i class="fas fa-arrow-down"></i></button></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="img-editor-footer">
+            <button class="btn-editor-cancel" id="bgCancel"><i class="fas fa-times"></i> Ləğv et</button>
+            <button class="btn-editor-save"   id="bgSave"><i class="fas fa-check"></i> Yadda saxla</button>
+        </div>
     </div>
-    <div class="food-modal-body">
-      <div class="food-img-upload" onclick="document.getElementById('foodImgInput').click()">
-        <img id="foodImgPreview" src="" alt="" style="display:none;width:100%;height:100%;object-fit:cover;border-radius:10px;">
-        <div id="foodImgPlaceholder"><i class="fas fa-camera" style="font-size:32px;color:var(--gold);"></i><p>Şəkil yüklə</p></div>
-      </div>
-      <input type="file" id="foodImgInput" accept="image/*" style="display:none" onchange="previewFoodImg(this)">
-      <input type="hidden" id="foodEditId" value="">
-      <div class="settings-grid">
-        <div class="setting-group full">
-          <label>Yeməyin Adı</label>
-          <input type="text" id="foodName" class="setting-input" placeholder="məs. Kabab">
-        </div>
-        <div class="setting-group">
-          <label>Qiymət (₼)</label>
-          <input type="number" id="foodPrice" class="setting-input" placeholder="0.00" step="0.5">
-        </div>
-        <div class="setting-group">
-          <label>Kateqoriya</label>
-          <select id="foodCategory" class="setting-input">
-            <option>Kabablar</option>
-            <option>Pizzalar</option>
-            <option>Salatlar</option>
-            <option>Şorbalar</option>
-            <option>Desertlər</option>
-            <option>İçkilər</option>
-          </select>
-        </div>
-        <div class="setting-group full">
-          <label>Açıqlama</label>
-          <textarea id="foodDesc" class="setting-input" rows="2" placeholder="Yeməyin təsviri..."></textarea>
-        </div>
-        <div class="setting-group">
-          <label class="check-label">
-            <input type="checkbox" id="foodPopular"> 🔥 Populyar
-          </label>
-        </div>
-        <div class="setting-group">
-          <label class="check-label">
-            <input type="checkbox" id="foodOutOfStock"> ❌ Stokda yox
-          </label>
-        </div>
-      </div>
-    </div>
-    <button class="btn-gold" onclick="saveFood()">💾 Yadda Saxla</button>
-  </div>
 </div>
 
-<!-- Order Detail Modal -->
-<div class="modal-overlay" id="orderDetailModal">
-  <div class="modal glass-card">
-    <div class="modal-header">
-      <h3><i class="fas fa-receipt"></i> Sifariş Detalları</h3>
-      <button onclick="closeModal('orderDetailModal')"><i class="fas fa-times"></i></button>
+<!-- ════════════════════════════════════
+     YEMƏK ŞƏKLİ REDAKTƏ MODALI
+════════════════════════════════════ -->
+<div class="img-editor-overlay" id="foodImgEditorModal">
+    <div class="img-editor-modal">
+        <div class="img-editor-header">
+            <div class="img-editor-title">
+                <i class="fas fa-crop-alt ic-gold"></i>
+                <h3>Yemək Şəkli Redaktəsi</h3>
+            </div>
+            <button class="img-editor-close" id="foodImgEditorClose"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="img-editor-body">
+            <div class="img-editor-left">
+                <div class="canvas-label"><i class="fas fa-hand-paper"></i> Şəkli sürükləyərək yerləşdirin</div>
+                <div class="canvas-container">
+                    <canvas id="foodImgCanvas" width="420" height="420" class="editor-canvas"></canvas>
+                </div>
+            </div>
+            <div class="img-editor-right">
+                <div class="preview-section">
+                    <div class="preview-title">Önizləmə</div>
+                    <div class="preview-sq-wrap">
+                        <canvas id="foodImgPreviewCanvas" width="130" height="130" class="preview-sq-canvas"></canvas>
+                    </div>
+                    <span class="preview-hint">Yemək kartı görünüşü</span>
+                </div>
+                <div class="ctrl-panel">
+                    <div class="ctrl-group">
+                        <span class="ctrl-lbl"><i class="fas fa-search"></i> Böyütmə</span>
+                        <div class="ctrl-row">
+                            <button class="ctrl-btn" id="foodZoomOut"><i class="fas fa-search-minus"></i></button>
+                            <span class="ctrl-val" id="foodZoomVal">100%</span>
+                            <button class="ctrl-btn" id="foodZoomIn"><i class="fas fa-search-plus"></i></button>
+                        </div>
+                    </div>
+                    <div class="ctrl-group">
+                        <span class="ctrl-lbl"><i class="fas fa-sync-alt"></i> Fırlatma</span>
+                        <div class="ctrl-row">
+                            <button class="ctrl-btn" id="foodRotateL"><i class="fas fa-undo"></i></button>
+                            <span class="ctrl-val" id="foodRotateVal">0°</span>
+                            <button class="ctrl-btn" id="foodRotateR"><i class="fas fa-redo"></i></button>
+                        </div>
+                    </div>
+                    <div class="ctrl-group">
+                        <span class="ctrl-lbl"><i class="fas fa-arrows-alt"></i> Hərəkət</span>
+                        <div class="move-pad">
+                            <div class="move-row"><button class="ctrl-btn move-btn" id="foodMoveU"><i class="fas fa-arrow-up"></i></button></div>
+                            <div class="move-row">
+                                <button class="ctrl-btn move-btn" id="foodMoveL"><i class="fas fa-arrow-left"></i></button>
+                                <button class="ctrl-btn move-btn move-center" id="foodImgReset"><i class="fas fa-dot-circle"></i></button>
+                                <button class="ctrl-btn move-btn" id="foodMoveR"><i class="fas fa-arrow-right"></i></button>
+                            </div>
+                            <div class="move-row"><button class="ctrl-btn move-btn" id="foodMoveD"><i class="fas fa-arrow-down"></i></button></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="img-editor-footer">
+            <button class="btn-editor-cancel" id="foodImgEditorCancel"><i class="fas fa-times"></i> Ləğv et</button>
+            <button class="btn-editor-save"   id="foodImgEditorSave"><i class="fas fa-check"></i> Yadda saxla</button>
+        </div>
     </div>
-    <div id="orderDetailContent"></div>
-  </div>
 </div>
 
-<!-- Cover Preview Modal -->
-<div class="modal-overlay" id="coverPreviewModal">
-  <div class="modal glass-card" style="max-width:700px;">
-    <div class="modal-header">
-      <h3><i class="fas fa-eye"></i> Üz Qabığı Önizləməsi</h3>
-      <button onclick="closeModal('coverPreviewModal')"><i class="fas fa-times"></i></button>
+<!-- ════════════════════════════════════
+     YEMƏK ƏLAVƏ ET / REDAKTƏSİ MODALI
+════════════════════════════════════ -->
+<div class="modal-overlay" id="foodFormModal">
+    <div class="modal-box">
+        <div class="modal-hdr">
+            <div class="modal-title-row">
+                <i class="fas fa-utensils ic-gold"></i>
+                <h3 id="foodFormTitle">Yeni Yemək</h3>
+            </div>
+            <button class="modal-close-btn" id="foodFormClose"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="modal-body-scroll">
+            <div class="food-form-layout">
+                <div class="ff-img-col">
+                    <div class="ff-img-preview" id="ffImgPreview">
+                        <i class="fas fa-camera"></i>
+                        <span>Şəkil yükləyin</span>
+                    </div>
+                    <button class="ff-img-btn" id="ffImgBtn"><i class="fas fa-upload"></i> Şəkil seçin</button>
+                </div>
+                <div class="ff-fields-col">
+                    <div class="ff-field">
+                        <label class="ff-label">Yeməyin adı <span class="ff-req">*</span></label>
+                        <input type="text" id="ffName" class="ff-input" placeholder="Məs: Kabab, Pizza...">
+                        <span class="ff-err" id="ffNameErr"></span>
+                    </div>
+                    <div class="ff-field">
+                        <label class="ff-label">Qısa təsvir</label>
+                        <textarea id="ffDesc" class="ff-input ff-textarea" rows="2" placeholder="Yeməyin qısa təsviri..."></textarea>
+                    </div>
+                    <div class="ff-row2">
+                        <div class="ff-field">
+                            <label class="ff-label">Qiymət (₼) <span class="ff-req">*</span></label>
+                            <input type="number" id="ffPrice" class="ff-input" min="0" step="0.5" placeholder="0.00">
+                            <span class="ff-err" id="ffPriceErr"></span>
+                        </div>
+                        <div class="ff-field">
+                            <label class="ff-label">Hazırlanma (dəq)</label>
+                            <input type="number" id="ffPrepTime" class="ff-input" min="1" max="180" placeholder="15">
+                        </div>
+                    </div>
+                    <div class="ff-field">
+                        <label class="ff-label">Kateqoriya <span class="ff-req">*</span></label>
+                        <select id="ffCategory" class="ff-input ff-select">
+                            <option value="">Kateqoriya seçin</option>
+                        </select>
+                        <span class="ff-err" id="ffCatErr"></span>
+                    </div>
+                    <div class="ff-field">
+                        <div class="ff-toggle-row">
+                            <span class="ff-label">Aktiv vəziyyəti</span>
+                            <label class="toggle-sw">
+                                <input type="checkbox" id="ffIsActive" checked>
+                                <span class="toggle-track"><span class="toggle-thumb"></span></span>
+                            </label>
+                        </div>
+                        <span class="ff-toggle-hint" id="ffActiveHint">Yemək müştərilərə görünür</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-modal-cancel" id="foodFormCancel"><i class="fas fa-times"></i> Ləğv et</button>
+            <button class="btn-modal-save"   id="foodFormSave"><i class="fas fa-check"></i> Yadda saxla</button>
+        </div>
     </div>
-    <img id="coverPreviewImg" src="" alt="Cover Preview" style="width:100%;border-radius:10px;">
-  </div>
 </div>
 
-<!-- Toast -->
-<div class="toast" id="toast"></div>
+<!-- ════════════════════════════════════
+     SİLMƏ TƏSDİQ MODALI
+════════════════════════════════════ -->
+<div class="modal-overlay" id="deleteModal">
+    <div class="modal-box modal-box-sm">
+        <div class="modal-hdr">
+            <div class="modal-title-row">
+                <i class="fas fa-exclamation-triangle" style="color:#EF4444"></i>
+                <h3>Yeməyi Sil</h3>
+            </div>
+        </div>
+        <div class="modal-body-scroll" style="text-align:center;padding:20px 24px">
+            <p style="color:rgba(255,255,255,0.75);font-size:13.5px;margin-bottom:8px">
+                Bu yeməyi menyudan silmək istədiyinizə əminsiniz?
+            </p>
+            <p class="del-food-name-txt" id="delFoodName"></p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-modal-cancel" id="deleteCancel"><i class="fas fa-times"></i> Ləğv et</button>
+            <button class="btn-modal-delete" id="deleteConfirm"><i class="fas fa-trash"></i> Bəli, sil</button>
+        </div>
+    </div>
+</div>
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<!-- ════════════════════════════════════
+     KATEQORİYA İDARƏETMƏ MODALI
+════════════════════════════════════ -->
+<div class="modal-overlay" id="catsModal">
+    <div class="modal-box modal-box-md">
+        <div class="modal-hdr">
+            <div class="modal-title-row">
+                <i class="fas fa-tags ic-gold"></i>
+                <h3>Kateqoriyalar</h3>
+            </div>
+            <button class="modal-close-btn" id="catsModalClose"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="modal-body-scroll">
+            <div class="cats-add-row">
+                <input type="text" id="newCatName" class="ff-input" placeholder="Yeni kateqoriya adı...">
+                <button class="btn-add-cat" id="addCatBtn"><i class="fas fa-plus"></i> Əlavə et</button>
+            </div>
+            <div class="cats-list" id="catsList"></div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-modal-save" id="catsModalDone"><i class="fas fa-check"></i> Bağla</button>
+        </div>
+    </div>
+</div>
+
+<!-- SCRIPTS -->
 <script src="script.js"></script>
+<script src="admin.js"></script>
+<script src="menu.js"></script>
+
 </body>
 </html>
